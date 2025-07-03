@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useRef, useEffect } from 'react'
-import { Send, Loader, BookOpen, User, Bot, Copy, ThumbsUp, ThumbsDown, RotateCcw, Check, Sparkles } from 'lucide-react'
+import { Send, Loader, BookOpen, User, Bot, Copy, ThumbsUp, ThumbsDown, RotateCcw, Check } from 'lucide-react'
 
 // Define types for our messages
 interface Message {
@@ -17,7 +17,7 @@ export default function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([
     { 
       id: 1, 
-      text: "Hey there! 👋 I'm your AI-powered workplace companion. Ready to dive into company policies, benefits, and everything in between? Let's make work life easier! ✨", 
+      text: "Hello! I'm your AI workplace assistant. I can help you navigate company policies, benefits, and procedures. What would you like to know?", 
       sender: 'bot',
       timestamp: new Date()
     }
@@ -63,7 +63,7 @@ export default function ChatPage() {
       
     } catch (error) {
       console.error('Error calling AI:', error)
-      return "Oops! Something went wrong on my end. 😅 Let's try that again!"
+      return "I'm having trouble responding right now. Please try again."
     }
   }
 
@@ -87,7 +87,7 @@ export default function ChatPage() {
     setBotIsTyping(true)
     
     // Simulate realistic typing delay
-    await new Promise(resolve => setTimeout(resolve, 800))
+    await new Promise(resolve => setTimeout(resolve, 600))
     
     // Get AI response
     const aiResponseText = await getAIResponse(userMessageText)
@@ -135,7 +135,7 @@ export default function ChatPage() {
     setIsLoading(true)
     setBotIsTyping(true)
     
-    await new Promise(resolve => setTimeout(resolve, 800))
+    await new Promise(resolve => setTimeout(resolve, 600))
     
     const aiResponseText = await getAIResponse(lastUserMessage.text)
     
@@ -159,87 +159,91 @@ export default function ChatPage() {
 
   // Sample questions for users to try
   const sampleQuestions = [
-    "💼 How much PTO do I get?",
-    "🏠 Can I work remotely?",
-    "🎁 What benefits are included?",
-    "💰 Expense reimbursement process?"
+    "How much vacation time do I get?",
+    "What's the remote work policy?",
+    "What benefits do we offer?",
+    "How do I submit expenses?"
   ]
 
   return (
-    <div className="flex flex-col h-screen max-w-5xl mx-auto bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 relative overflow-hidden">
-      {/* Animated background elements */}
-      <div className="absolute inset-0 overflow-hidden">
-        <div className="absolute -top-40 -right-40 w-80 h-80 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute -bottom-40 -left-40 w-80 h-80 bg-gradient-to-br from-purple-400 to-pink-500 rounded-full mix-blend-multiply filter blur-xl opacity-20 animate-pulse"></div>
-        <div className="absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-gradient-to-br from-emerald-400 to-cyan-500 rounded-full mix-blend-multiply filter blur-xl opacity-10 animate-pulse"></div>
-      </div>
-
+    <div className="flex flex-col h-screen max-w-4xl mx-auto" style={{ backgroundColor: '#1a1a1a' }}>
       {/* Header */}
-      <div className="relative z-10 bg-black/20 backdrop-blur-xl border-b border-white/10 p-6">
-        <div className="flex items-center space-x-4">
-          <div className="bg-gradient-to-r from-cyan-400 to-purple-500 p-3 rounded-2xl shadow-lg">
-            <BookOpen size={28} className="text-white" />
+      <div className="border-b p-4" style={{ backgroundColor: '#2d2d2d', borderColor: '#3a3a3a' }}>
+        <div className="flex items-center space-x-3">
+          <div className="p-2 rounded-lg" style={{ backgroundColor: '#8b5cf6' }}>
+            <BookOpen size={20} className="text-white" />
           </div>
           <div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-cyan-400 via-purple-400 to-pink-400 bg-clip-text text-transparent">
-              AI Workplace Assistant
-            </h1>
-            <p className="text-slate-300 text-sm font-medium">Your smart companion for all things work 🚀</p>
-          </div>
-          <div className="ml-auto">
-            <Sparkles className="text-yellow-400 animate-pulse" size={24} />
+            <h1 className="text-lg font-medium" style={{ color: '#f3f4f6' }}>Employee Handbook Assistant</h1>
+            <p className="text-sm" style={{ color: '#9ca3af' }}>AI-powered workplace guidance</p>
           </div>
         </div>
       </div>
 
       {/* Sample Questions */}
-      <div className="relative z-10 p-4 bg-black/10 backdrop-blur-sm border-b border-white/5">
-        <p className="text-sm text-slate-300 mb-3 font-medium">✨ Quick starters:</p>
+      <div className="border-b p-4" style={{ backgroundColor: '#2d2d2d', borderColor: '#3a3a3a' }}>
+        <p className="text-sm mb-2" style={{ color: '#9ca3af' }}>Try asking:</p>
         <div className="flex flex-wrap gap-2">
-          {sampleQuestions.map((question, index) => (
-            <button
-              key={index}
-              onClick={() => setCurrentMessage(question)}
-              className="text-xs bg-gradient-to-r from-slate-700/50 to-slate-600/50 hover:from-purple-600/50 hover:to-pink-600/50 text-white px-4 py-2 rounded-full border border-white/20 transition-all duration-300 hover:shadow-lg hover:shadow-purple-500/20 backdrop-blur-sm"
-            >
-              {question}
-            </button>
-          ))}
+          {sampleQuestions.map((question, index) => {
+            const colors = ['#10b981', '#3b82f6', '#8b5cf6', '#6b7280'] // green, blue, purple, light gray
+            const bgColor = colors[index % colors.length]
+            return (
+              <button
+                key={index}
+                onClick={() => setCurrentMessage(question)}
+                className="text-xs px-3 py-1.5 rounded-md transition-colors text-white"
+                style={{ 
+                  backgroundColor: bgColor,
+                  opacity: 0.8
+                }}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.opacity = '1'
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.opacity = '0.8'
+                }}
+              >
+                {question}
+              </button>
+            )
+          })}
         </div>
       </div>
 
       {/* Messages Area */}
-      <div className="relative z-10 flex-1 overflow-y-auto p-6 space-y-8">
+      <div className="flex-1 overflow-y-auto p-4 space-y-4" style={{ backgroundColor: '#1a1a1a' }}>
         {messages.map((message) => (
           <div
             key={message.id}
             className={`flex ${message.sender === 'user' ? 'justify-end' : 'justify-start'}`}
           >
-            <div className={`flex max-w-xs lg:max-w-md space-x-4 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+            <div className={`flex max-w-2xl space-x-3 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
               {/* Avatar */}
-              <div className={`flex-shrink-0 w-10 h-10 rounded-2xl flex items-center justify-center shadow-lg ${
-                message.sender === 'user' 
-                  ? 'bg-gradient-to-br from-cyan-400 to-blue-500' 
-                  : 'bg-gradient-to-br from-purple-500 to-pink-500'
-              }`}>
-                {message.sender === 'user' ? <User size={18} className="text-white" /> : <Bot size={18} className="text-white" />}
+              <div 
+                className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+                style={{ 
+                  backgroundColor: message.sender === 'user' ? '#d97706' : '#3b82f6'
+                }}
+              >
+                {message.sender === 'user' ? <User size={16} className="text-white" /> : <Bot size={16} className="text-white" />}
               </div>
               
               {/* Message Content */}
               <div className={`flex flex-col ${message.sender === 'user' ? 'items-end' : 'items-start'}`}>
                 <div
-                  className={`px-5 py-4 rounded-3xl shadow-xl backdrop-blur-sm border ${
-                    message.sender === 'user'
-                      ? 'bg-gradient-to-br from-cyan-500 to-blue-600 text-white border-cyan-400/30 rounded-tr-lg'
-                      : 'bg-black/40 text-slate-100 border-white/20 rounded-tl-lg'
-                  }`}
+                  className="px-4 py-3 rounded-lg"
+                  style={{
+                    backgroundColor: message.sender === 'user' ? '#d97706' : '#2d2d2d',
+                    color: message.sender === 'user' ? '#ffffff' : '#f3f4f6',
+                    border: message.sender === 'bot' ? '1px solid #3a3a3a' : 'none'
+                  }}
                 >
-                  <p className="text-sm whitespace-pre-wrap leading-relaxed font-medium">{message.text}</p>
+                  <p className="text-sm leading-relaxed whitespace-pre-wrap">{message.text}</p>
                 </div>
                 
                 {/* Message Actions & Timestamp */}
-                <div className={`flex items-center space-x-3 mt-2 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
-                  <span className="text-xs text-slate-400 font-medium">
+                <div className={`flex items-center space-x-2 mt-1 ${message.sender === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
+                  <span className="text-xs" style={{ color: '#6b7280' }}>
                     {formatTime(message.timestamp)}
                   </span>
                   
@@ -247,32 +251,44 @@ export default function ChatPage() {
                     <div className="flex items-center space-x-1">
                       <button
                         onClick={() => copyMessage(message.id, message.text)}
-                        className="p-2 text-slate-400 hover:text-cyan-400 transition-colors rounded-full hover:bg-white/10"
+                        className="p-1 rounded transition-colors"
+                        style={{ color: '#6b7280' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = '#6b7280' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = '#6b7280' }}
                         title="Copy message"
                       >
-                        {copiedMessageId === message.id ? <Check size={16} /> : <Copy size={16} />}
+                        {copiedMessageId === message.id ? <Check size={14} style={{ color: '#10b981' }} /> : <Copy size={14} />}
                       </button>
                       <button
                         onClick={() => {/* Add thumbs up logic */}}
-                        className="p-2 text-slate-400 hover:text-green-400 transition-colors rounded-full hover:bg-white/10"
+                        className="p-1 rounded transition-colors"
+                        style={{ color: '#6b7280' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = '#10b981' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = '#6b7280' }}
                         title="Good response"
                       >
-                        <ThumbsUp size={16} />
+                        <ThumbsUp size={14} />
                       </button>
                       <button
                         onClick={() => {/* Add thumbs down logic */}}
-                        className="p-2 text-slate-400 hover:text-red-400 transition-colors rounded-full hover:bg-white/10"
+                        className="p-1 rounded transition-colors"
+                        style={{ color: '#6b7280' }}
+                        onMouseEnter={(e) => { e.currentTarget.style.color = '#ef4444' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = '#6b7280' }}
                         title="Poor response"
                       >
-                        <ThumbsDown size={16} />
+                        <ThumbsDown size={14} />
                       </button>
                       <button
                         onClick={regenerateResponse}
                         disabled={isLoading}
-                        className="p-2 text-slate-400 hover:text-purple-400 transition-colors disabled:opacity-50 rounded-full hover:bg-white/10"
+                        className="p-1 rounded transition-colors disabled:opacity-50"
+                        style={{ color: '#6b7280' }}
+                        onMouseEnter={(e) => { if (!isLoading) e.currentTarget.style.color = '#8b5cf6' }}
+                        onMouseLeave={(e) => { e.currentTarget.style.color = '#6b7280' }}
                         title="Regenerate response"
                       >
-                        <RotateCcw size={16} />
+                        <RotateCcw size={14} />
                       </button>
                     </div>
                   )}
@@ -285,18 +301,27 @@ export default function ChatPage() {
         {/* Bot Typing Indicator */}
         {botIsTyping && (
           <div className="flex justify-start">
-            <div className="flex space-x-4">
-              <div className="flex-shrink-0 w-10 h-10 bg-gradient-to-br from-purple-500 to-pink-500 rounded-2xl flex items-center justify-center shadow-lg">
-                <Bot size={18} className="text-white" />
+            <div className="flex space-x-3">
+              <div 
+                className="flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center"
+                style={{ backgroundColor: '#3b82f6' }}
+              >
+                <Bot size={16} className="text-white" />
               </div>
-              <div className="bg-black/40 border border-white/20 px-5 py-4 rounded-3xl rounded-tl-lg shadow-xl backdrop-blur-sm">
-                <div className="flex items-center space-x-3">
+              <div 
+                className="px-4 py-3 rounded-lg border"
+                style={{ 
+                  backgroundColor: '#2d2d2d',
+                  borderColor: '#3a3a3a'
+                }}
+              >
+                <div className="flex items-center space-x-2">
                   <div className="flex space-x-1">
-                    <div className="w-2 h-2 bg-gradient-to-r from-cyan-400 to-purple-500 rounded-full animate-bounce"></div>
-                    <div className="w-2 h-2 bg-gradient-to-r from-purple-500 to-pink-500 rounded-full animate-bounce" style={{animationDelay: '0.1s'}}></div>
-                    <div className="w-2 h-2 bg-gradient-to-r from-pink-500 to-cyan-400 rounded-full animate-bounce" style={{animationDelay: '0.2s'}}></div>
+                    <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: '#10b981' }}></div>
+                    <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: '#3b82f6', animationDelay: '0.1s' }}></div>
+                    <div className="w-2 h-2 rounded-full animate-bounce" style={{ backgroundColor: '#8b5cf6', animationDelay: '0.2s' }}></div>
                   </div>
-                  <span className="text-sm text-slate-300 font-medium">AI is cooking up something good...</span>
+                  <span className="text-sm" style={{ color: '#9ca3af' }}>Thinking...</span>
                 </div>
               </div>
             </div>
@@ -307,29 +332,52 @@ export default function ChatPage() {
       </div>
 
       {/* Input Area */}
-      <div className="relative z-10 p-6 bg-black/20 backdrop-blur-xl border-t border-white/10">
-        <div className="flex space-x-4">
+      <div className="border-t p-4" style={{ backgroundColor: '#2d2d2d', borderColor: '#3a3a3a' }}>
+        <div className="flex space-x-3">
           <input
             type="text"
             value={currentMessage}
             onChange={(e) => setCurrentMessage(e.target.value)}
             onKeyPress={handleKeyPress}
-            placeholder="Drop your question here... 💬"
+            placeholder="Ask about policies, benefits, or procedures..."
             disabled={isLoading}
-            className={`flex-1 border border-white/20 rounded-full px-6 py-4 focus:outline-none focus:ring-2 focus:ring-cyan-400 focus:border-transparent transition-all duration-300 placeholder-slate-400 font-medium ${
-              isLoading ? 'bg-black/20 cursor-not-allowed text-slate-500' : 'bg-black/40 text-white shadow-lg backdrop-blur-sm'
+            className={`flex-1 rounded-lg px-4 py-3 transition-colors focus:outline-none focus:ring-2 ${
+              isLoading ? 'opacity-50 cursor-not-allowed' : ''
             }`}
+            style={{
+              backgroundColor: '#374151',
+              color: '#f3f4f6',
+              border: '1px solid #4b5563'
+            }}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = '#8b5cf6'
+              e.currentTarget.style.boxShadow = '0 0 0 2px rgba(139, 92, 246, 0.2)'
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = '#4b5563'
+              e.currentTarget.style.boxShadow = 'none'
+            }}
           />
           <button
             onClick={sendMessage}
             disabled={isLoading || currentMessage.trim() === ''}
-            className={`p-4 rounded-full focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-300 ${
-              isLoading || currentMessage.trim() === ''
-                ? 'bg-slate-700 cursor-not-allowed text-slate-500' 
-                : 'bg-gradient-to-r from-cyan-500 to-purple-600 hover:from-cyan-400 hover:to-purple-500 text-white shadow-lg hover:shadow-cyan-500/30 transform hover:scale-105'
-            }`}
+            className="px-4 py-3 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            style={{
+              backgroundColor: isLoading || currentMessage.trim() === '' ? '#4b5563' : '#10b981',
+              color: '#ffffff'
+            }}
+            onMouseEnter={(e) => {
+              if (!isLoading && currentMessage.trim() !== '') {
+                e.currentTarget.style.backgroundColor = '#059669'
+              }
+            }}
+            onMouseLeave={(e) => {
+              if (!isLoading && currentMessage.trim() !== '') {
+                e.currentTarget.style.backgroundColor = '#10b981'
+              }
+            }}
           >
-            {isLoading ? <Loader size={22} className="animate-spin" /> : <Send size={22} />}
+            {isLoading ? <Loader size={18} className="animate-spin" /> : <Send size={18} />}
           </button>
         </div>
       </div>
