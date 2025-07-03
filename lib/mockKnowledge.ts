@@ -79,13 +79,13 @@ export function searchPolicies(query: string, maxResults: number = 3): PolicyDoc
     ).length
     score += contentMatches
     
-    return { ...policy, score }
+    return { policy, score }
   })
   
   // Return top matches, sorted by score
   return scoredPolicies
-    .filter(policy => policy.score > 0)
+    .filter(item => item.score > 0)
     .sort((a, b) => b.score - a.score)
     .slice(0, maxResults)
-    .map(({ score, ...policy }) => policy) // Remove score from final result
-}
+    .map(item => item.policy)
+};

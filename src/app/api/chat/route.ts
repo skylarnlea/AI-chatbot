@@ -1,6 +1,6 @@
 import OpenAI from 'openai'
 import { NextRequest, NextResponse } from 'next/server'
-import { searchPolicies } from '../../../lib/mockKnowledge'
+import { searchPolicies } from '../../../../lib/mockKnowledge'
 
 // Initialize OpenAI client
 const openai = new OpenAI({
