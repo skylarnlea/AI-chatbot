@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { searchPolicies } from '../../../../lib/mockKnowledge'
+import { searchPolicies, PolicyDocument } from '../../../../lib/mockKnowledge'
 
 // Mock AI responses for testing without OpenAI
 const mockAIResponses = [
@@ -10,7 +10,7 @@ const mockAIResponses = [
   "Absolutely! I can help clarify that for you..."
 ]
 
-function generateMockResponse(userMessage: string, relevantPolicies: any[]): string {
+function generateMockResponse(userMessage: string, relevantPolicies: PolicyDocument[]): string {
   const randomIntro = mockAIResponses[Math.floor(Math.random() * mockAIResponses.length)]
   
   if (relevantPolicies.length > 0) {
@@ -58,4 +58,4 @@ export async function POST(request: NextRequest) {
       { status: 500 }
     )
   }
-}
+};
