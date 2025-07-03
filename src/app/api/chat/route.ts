@@ -1,11 +1,25 @@
-import OpenAI from 'openai'
 import { NextRequest, NextResponse } from 'next/server'
 import { searchPolicies } from '../../../../lib/mockKnowledge'
 
-// Initialize OpenAI client
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-})
+// Mock AI responses for testing without OpenAI
+const mockAIResponses = [
+  "Great question! Based on our company policies, here's what I found...",
+  "I'd be happy to help with that! According to our handbook...",
+  "That's an important topic! Let me break this down for you...",
+  "Perfect timing for this question! Here's what our policy says...",
+  "Absolutely! I can help clarify that for you..."
+]
+
+function generateMockResponse(userMessage: string, relevantPolicies: any[]): string {
+  const randomIntro = mockAIResponses[Math.floor(Math.random() * mockAIResponses.length)]
+  
+  if (relevantPolicies.length > 0) {
+    const firstPolicy = relevantPolicies[0]
+    return `${randomIntro}\n\n**${firstPolicy.title}**\n${firstPolicy.content}\n\nIs there anything specific about this policy you'd like me to clarify? 😊`
+  } else {
+    return `${randomIntro}\n\nI couldn't find specific information about "${userMessage}" in our current policies. For detailed company-specific information, I'd recommend reaching out to HR directly. \n\nIs there anything else I can help you with? 🤔`
+  }
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -23,61 +37,24 @@ export async function POST(request: NextRequest) {
     console.log('Searching for relevant policies...')
     const relevantPolicies = searchPolicies(message, 2)
 
-    // Build the system prompt with context
-    let systemPrompt = `You are a helpful AI assistant for an employee handbook chatbot. 
-                       You help employees understand company policies, procedures, and guidelines.
-                       Be friendly, professional, and concise in your responses.
-                       Always provide accurate information based on the company policies provided.`
+    // Generate mock AI response
+    const aiResponse = generateMockResponse(message, relevantPolicies)
 
-    if (relevantPolicies.length > 0) {
-      const policyContext = relevantPolicies
-        .map(policy => `${policy.title}:\n${policy.content}`)
-        .join('\n\n---\n\n')
-        
-      systemPrompt += `\n\nHere are the relevant company policies that apply to the user's question:\n\n${policyContext}\n\nPlease base your response on these specific policies. If the question asks for information not covered in these policies, let the user know and suggest they contact HR for more details.`
-    } else {
-      systemPrompt += `\n\nNo specific company policies were found for this question. Please provide general guidance about typical workplace policies and suggest the user contact HR for company-specific information.`
-    }
-
-    // Call OpenAI API with context
-    const completion = await openai.chat.completions.create({
-      model: "gpt-3.5-turbo",
-      messages: [
-        {
-          role: "system",
-          content: systemPrompt
-        },
-        {
-          role: "user",
-          content: message
-        }
-      ],
-      max_tokens: 500,
-      temperature: 0.3, // Lower temperature for more consistent responses
-    })
-
-    // Extract the AI response
-    const aiResponse = completion.choices[0]?.message?.content || "I'm sorry, I couldn't generate a response."
+    // Add a small delay to simulate API call
+    await new Promise(resolve => setTimeout(resolve, 800))
 
     return NextResponse.json({ 
       response: aiResponse,
-      policiesFound: relevantPolicies.length, // For debugging
-      relevantPolicies: relevantPolicies.map(p => p.title) // Show which policies were used
+      policiesFound: relevantPolicies.length,
+      relevantPolicies: relevantPolicies.map(p => p.title),
+      mode: 'mock' // So you know it's using mock responses
     })
 
   } catch (error) {
-    console.error('OpenAI API error:', error)
-    
-    // Handle different types of errors
-    if (error instanceof Error) {
-      return NextResponse.json(
-        { error: 'Failed to get AI response: ' + error.message },
-        { status: 500 }
-      )
-    }
+    console.error('Mock API error:', error)
     
     return NextResponse.json(
-      { error: 'An unexpected error occurred' },
+      { error: 'Something went wrong with the mock API' },
       { status: 500 }
     )
   }
