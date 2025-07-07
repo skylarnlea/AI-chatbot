@@ -1,12 +1,16 @@
 // src/app/api/chat/route.ts
+// src/app/api/chat/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { generateContent } from '@/lib/gemini'; // Adjust the import path as necessary
+import { generateContent } from '@/lib/gemini';
 import { ChatRequest, ChatResponse, ErrorResponse } from '@/types/chat';
 
 export async function POST(request: NextRequest) {
   try {
     const body: ChatRequest = await request.json();
-    const { message } = body;
+    const { message, timestamp } = body;
+    
+    // Log when the message was originally sent vs when we received it
+    console.log(`Message sent at: ${timestamp}, received at: ${new Date().toISOString()}`);
 
     // Validate input
     if (!message || typeof message !== 'string' || message.trim().length === 0) {
@@ -52,4 +56,4 @@ export async function GET() {
     { error: 'Method not allowed' } as ErrorResponse,
     { status: 405 }
   );
-}
+};
