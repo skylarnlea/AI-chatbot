@@ -37,6 +37,10 @@ export default function ChatPage() {
   
   // State for copy feedback
   const [copiedMessageId, setCopiedMessageId] = useState<number | null>(null)
+
+    // State for message reactions
+  const [likedMessages, setLikedMessages] = useState<Set<number>>(new Set())
+  const [dislikedMessages, setDislikedMessages] = useState<Set<number>>(new Set())
   
   // State for expanded messages
   const [expandedMessages, setExpandedMessages] = useState<Set<number>>(new Set())
@@ -152,6 +156,87 @@ export default function ChatPage() {
       console.error('Failed to copy message:', error)
     }
   }
+
+  // Handle thumbs up
+  const handleThumbsUp = async (messageId: number) => {
+    setLikedMessages(prev => {
+      const newSet = new Set(prev)
+      newSet.add(messageId)
+      return newSet
+    })
+    // Remove from disliked if it was there
+    setDislikedMessages(prev => {
+      const newSet = new Set(prev)
+      newSet.delete(messageId)
+      return newSet
+    })
+    
+    // Optional: Send feedback to analytics API
+    console.log('User liked message:', messageId)
+  }
+
+  const handleThumbsDown = async (messageId: number) => {
+    setDislikedMessages(prev => {
+      const newSet = new Set(prev)
+      newSet.add(messageId)
+      return newSet
+    })
+    // Remove from liked if it was there
+    setLikedMessages(prev => {
+      const newSet = new Set(prev)
+      newSet.delete(messageId)
+      return newSet
+    })
+    
+    // Optional: Show feedback modal or send to API
+    console.log('User disliked message:', messageId)
+  }
+
+  // Enhanced regenerate response
+  const regenerateResponse = async () => {
+    const lastUserMessage = messages.filter(m => m.sender === 'user').slice(-1)[0]
+    if (!lastUserMessage || isLoading) return
+    
+    // Remove last bot message
+    setMessages(prev => {
+      const botMessages = prev.filter(m => m.sender === 'bot')
+      if (botMessages.length === 0) return prev
+      
+      const lastBotMessageId = Math.max(...botMessages.map(m => m.id))
+      return prev.filter(m => m.id !== lastBotMessageId)
+    })
+    
+    setIsLoading(true)
+    setBotIsTyping(true)
+    
+    await new Promise(resolve => setTimeout(resolve, 1200))
+    
+    // Get new AI response
+    const { response: aiResponseText, policies } = await getAIResponse(lastUserMessage.text)
+    
+    setBotIsTyping(false)
+    
+    // Add new AI response
+    const newBotResponse: Message = {
+      id: Date.now(),
+      text: aiResponseText,
+      sender: 'bot',
+      timestamp: new Date(),
+      policies,
+      isAnimating: true
+    }
+    
+    setMessages(prevMessages => [...prevMessages, newBotResponse])
+    setIsLoading(false)
+    
+    // Remove animation state
+    setTimeout(() => {
+      setMessages(prev => prev.map(msg => 
+        msg.id === newBotResponse.id ? { ...msg, isAnimating: false } : msg
+      ))
+    }, 500)
+  }
+
 
   // Toggle message expansion
   const toggleExpanded = (messageId: number) => {
@@ -350,14 +435,20 @@ export default function ChatPage() {
                           {copiedMessageId === message.id ? <Check size={16} style={{ color: '#ff6b35' }} /> : <Copy size={16} />}
                         </button>
                         <button
+                          onClick={() => handleThumbsUp(message.id)}
                           className="p-2 rounded-lg transition-colors"
-                          style={{ color: '#6b7280', backgroundColor: 'transparent' }}
+                          style={{ 
+                            color: likedMessages.has(message.id) ? '#ff6b35' : '#6b7280', 
+                            backgroundColor: 'transparent' 
+                          }}
                           onMouseEnter={(e) => { 
-                            e.currentTarget.style.color = '#ff6b35'
+                            if (!likedMessages.has(message.id)) {
+                              e.currentTarget.style.color = '#ff6b35'
+                            }
                             e.currentTarget.style.backgroundColor = '#2a2a2a'
                           }}
                           onMouseLeave={(e) => { 
-                            e.currentTarget.style.color = '#6b7280'
+                            e.currentTarget.style.color = likedMessages.has(message.id) ? '#ff6b35' : '#6b7280'
                             e.currentTarget.style.backgroundColor = 'transparent'
                           }}
                           title="Good response"
@@ -365,14 +456,20 @@ export default function ChatPage() {
                           <ThumbsUp size={16} />
                         </button>
                         <button
+                          onClick={() => handleThumbsDown(message.id)}
                           className="p-2 rounded-lg transition-colors"
-                          style={{ color: '#6b7280', backgroundColor: 'transparent' }}
+                          style={{ 
+                            color: dislikedMessages.has(message.id) ? '#ef4444' : '#6b7280', 
+                            backgroundColor: 'transparent' 
+                          }}
                           onMouseEnter={(e) => { 
-                            e.currentTarget.style.color = '#ef4444'
+                            if (!dislikedMessages.has(message.id)) {
+                              e.currentTarget.style.color = '#ef4444'
+                            }
                             e.currentTarget.style.backgroundColor = '#2a2a2a'
                           }}
                           onMouseLeave={(e) => { 
-                            e.currentTarget.style.color = '#6b7280'
+                            e.currentTarget.style.color = dislikedMessages.has(message.id) ? '#ef4444' : '#6b7280'
                             e.currentTarget.style.backgroundColor = 'transparent'
                           }}
                           title="Poor response"
@@ -382,6 +479,7 @@ export default function ChatPage() {
                       </div>
                       
                       <button
+                        onClick={regenerateResponse}
                         disabled={isLoading}
                         className="p-2 rounded-lg transition-colors disabled:opacity-50"
                         style={{ color: '#6b7280', backgroundColor: 'transparent' }}
