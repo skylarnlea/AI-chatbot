@@ -1,8 +1,8 @@
+// src/components/ChatInterface.tsx
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { Message, ChatRequest, ChatResponse, ErrorResponse } from '@/types/chat';
-
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -35,9 +35,9 @@ export default function ChatInterface() {
     setIsLoading(true);
 
     try {
-      const requestBody: ChatRequest = {
+      const requestBody: ChatRequest = { 
         message: input.trim(),
-        timestamp: ''
+        timestamp: new Date().toISOString()
       };
 
       const response = await fetch('/api/chat', {
@@ -167,4 +167,4 @@ export default function ChatInterface() {
       </div>
     </div>
   );
-}
+};
