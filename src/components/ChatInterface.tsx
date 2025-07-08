@@ -57,6 +57,7 @@ export default function ChatInterface() {
           type: 'bot',
           content: chatResponse.response,
           timestamp: new Date(chatResponse.timestamp),
+          sources: chatResponse.sources,
         };
         setMessages(prev => [...prev, botMessage]);
       } else {
@@ -77,11 +78,34 @@ export default function ChatInterface() {
     }
   };
 
+  const quickActions = [
+    "What are our vacation days?",
+    "How does the remote work policy work?", 
+    "What benefits do we have?",
+    "How do I submit expenses?",
+    "What's our sick leave policy?",
+    "Tell me about the code of conduct"
+  ];
+
+  const handleQuickAction = (action: string) => {
+    setInput(action);
+  };
+
   const formatTime = (timestamp: Date): string => {
     return timestamp.toLocaleTimeString([], {
       hour: '2-digit',
       minute: '2-digit',
     });
+  };
+
+  const handleKeyPress = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      const form = e.currentTarget.form;
+      if (form) {
+        form.requestSubmit();
+      }
+    }
   };
 
   return (
@@ -122,11 +146,27 @@ export default function ChatInterface() {
               <p className="text-gray-400 mb-6 max-w-md mx-auto">
                 Ask me anything about company policies, HR questions, IT support, or general workplace information.
               </p>
-              <div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto">
+              <div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto mb-6">
                 <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm border border-gray-600">Company Policies</span>
                 <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm border border-gray-600">HR Questions</span>
                 <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm border border-gray-600">IT Support</span>
                 <span className="px-3 py-1 bg-[#ed7c31] text-white rounded-full text-sm">Benefits</span>
+              </div>
+              
+              {/* Quick Actions */}
+              <div className="max-w-2xl mx-auto">
+                <h4 className="text-gray-300 text-sm font-medium mb-3 text-center">Quick Questions:</h4>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                  {quickActions.map((action, index) => (
+                    <button
+                      key={index}
+                      onClick={() => handleQuickAction(action)}
+                      className="text-left p-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-[#ed7c31] rounded-lg text-gray-300 hover:text-white text-sm transition-all duration-200"
+                    >
+                      {action}
+                    </button>
+                  ))}
+                </div>
               </div>
             </div>
           ) : (
@@ -162,6 +202,27 @@ export default function ChatInterface() {
                     }`}
                   >
                     <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
+                    
+                    {/* Sources (only for bot messages) */}
+                    {message.type === 'bot' && message.sources && message.sources.length > 0 && (
+                      <div className="mt-3 pt-3 border-t border-gray-700">
+                        <p className="text-xs text-gray-400 mb-2">Sources:</p>
+                        <div className="flex flex-wrap gap-1">
+                          {message.sources.map((source, idx) => (
+                            <span
+                              key={idx}
+                              className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-[#ed7c31] text-white"
+                            >
+                              <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                              </svg>
+                              {source.title}
+                            </span>
+                          ))}
+                        </div>
+                      </div>
+                    )}
+                    
                     <p className={`text-xs mt-2 ${
                       message.type === 'user' ? 'text-orange-100' : 'text-gray-400'
                     }`}>
@@ -199,6 +260,7 @@ export default function ChatInterface() {
               type="text"
               value={input}
               onChange={(e) => setInput(e.target.value)}
+              onKeyPress={handleKeyPress}
               placeholder="Type your message here..."
               className="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed7c31] focus:border-[#ed7c31] text-gray-200 placeholder-gray-500"
               disabled={isLoading}
@@ -219,4 +281,4 @@ export default function ChatInterface() {
       </div>
     </div>
   );
-};
+}

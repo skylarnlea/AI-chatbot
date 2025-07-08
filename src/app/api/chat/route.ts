@@ -1,8 +1,58 @@
 // src/app/api/chat/route.ts
-// src/app/api/chat/route.ts
 import { NextRequest, NextResponse } from 'next/server';
-import { generateContent } from '@/lib/gemini';
-import { ChatRequest, ChatResponse, ErrorResponse } from '@/types/chat';
+import { ChatRequest, ChatResponse, ErrorResponse, PolicySource } from '@/types/chat';
+import { searchPolicies } from '@/lib/mockKnowledge';
+
+// Helper function to simulate AI thinking time
+const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+
+// Function to generate contextual responses using the knowledge base
+function generateContextualResponse(message: string): { response: string; sources: PolicySource[] } {
+  const lowerMessage = message.toLowerCase();
+  
+  // Search for relevant policies
+  const relevantPolicies = searchPolicies(message, 2);
+  
+  if (relevantPolicies.length > 0) {
+    // Use the most relevant policy to craft a response
+    const topPolicy = relevantPolicies[0];
+    
+    // Create a response that includes the policy information
+    let response = `Based on our ${topPolicy.title}, here's what I can tell you:\n\n`;
+    response += topPolicy.content;
+    
+    if (relevantPolicies.length > 1) {
+      response += `\n\nYou might also be interested in our ${relevantPolicies[1].title}. Would you like me to explain that as well?`;
+    } else {
+      response += `\n\nIs there anything specific about this policy you'd like me to clarify?`;
+    }
+    
+    // Create sources array
+    const sources: PolicySource[] = relevantPolicies.map(policy => ({
+      title: policy.title,
+      category: policy.category
+    }));
+    
+    return { response, sources };
+  }
+  
+  // Fallback responses for general queries (no sources)
+  let response = "";
+  
+  if (lowerMessage.includes('hello') || lowerMessage.includes('hi') || lowerMessage.includes('hey')) {
+    response = "Hello! I'm your company AI assistant. I can help you with information about our policies, benefits, HR procedures, and workplace guidelines. What would you like to know about?";
+  } else if (lowerMessage.includes('help') || lowerMessage.includes('support')) {
+    response = "I'm here to help! I can provide information about:\n\n• Employee benefits and insurance\n• Time off and vacation policies\n• Remote work arrangements\n• Expense reimbursement\n• Code of conduct and workplace policies\n• HR procedures and guidelines\n\nWhat specific topic would you like to know about?";
+  } else if (lowerMessage.includes('contact') || lowerMessage.includes('hr') || lowerMessage.includes('human resources')) {
+    response = "For direct HR support, you can:\n\n• Email: hr@company.com\n• Phone: (555) 123-4567\n• Submit a ticket through the Cheil Help Desk\n• Visit the HR office on the 3rd floor\n\nFor immediate policy questions, I can help you right here! What would you like to know?";
+  } else if (lowerMessage.includes('it') || lowerMessage.includes('technical') || lowerMessage.includes('computer')) {
+    response = "For IT support, please:\n\n• Submit a ticket through the Cheil Help Desk for technical issues\n• Email: it-support@company.com\n• Call the IT helpline: (555) 123-TECH\n• For password resets, use the self-service portal\n\nI can also help with general IT policy questions. What do you need assistance with?";
+  } else {
+    response = "I'd be happy to help you with company policies and information! I have access to details about benefits, time off, remote work, expenses, and workplace guidelines. Could you be more specific about what you're looking for? For example, you could ask about:\n\n• \"What are our vacation days?\"\n• \"How does remote work policy work?\"\n• \"What benefits do we have?\"\n• \"How do I submit expenses?\"";
+  }
+  
+  return { response, sources: [] };
+}
 
 export async function POST(request: NextRequest) {
   try {
@@ -28,12 +78,17 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Generate AI response
-    const aiResponse = await generateContent(message);
+    // Simulate AI processing time (500ms to 2 seconds)
+    const processingTime = Math.floor(Math.random() * 1500) + 500;
+    await delay(processingTime);
+
+    // Generate contextual response using knowledge base
+    const { response: aiResponse, sources } = generateContextualResponse(message);
 
     const response: ChatResponse = {
       response: aiResponse,
       timestamp: new Date().toISOString(),
+      sources: sources.length > 0 ? sources : undefined,
     };
 
     return NextResponse.json(response, { status: 200 });
@@ -56,4 +111,4 @@ export async function GET() {
     { error: 'Method not allowed' } as ErrorResponse,
     { status: 405 }
   );
-};
+}
