@@ -139,7 +139,7 @@ export default function ChatInterface() {
     <div className="max-w-6xl mx-auto">
       {/* Chat Container */}
       <div 
-        className="rounded-lg shadow-lg h-[600px] flex flex-col border border-gray-700"
+        className="rounded-lg shadow-lg h-[700px] flex flex-col border border-gray-700"
         style={{ backgroundColor: colors.black }}
       >
         <ChatHeader 
