@@ -1,8 +1,17 @@
+// src/components/ChatInterface.tsx
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
-import { Message, ChatRequest, ChatResponse, ErrorResponse } from '@/types/chat';
+import { Message, ChatRequest, ChatResponse, ErrorResponse, ChatSession } from '@/types/chat';
 import { colors } from '@/styles/colors';
+import { 
+  saveChatSession,  
+  getChatSession, 
+  deleteChatSession, 
+  generateChatTitle, 
+  generateSessionId,
+  getRecentSessions 
+} from '@/lib/chatStorage';
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -10,7 +19,15 @@ export default function ChatInterface() {
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [showWelcome, setShowWelcome] = useState<boolean>(true);
   const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
+  const [currentSessionId, setCurrentSessionId] = useState<string | null>(null);
+  const [showHistory, setShowHistory] = useState<boolean>(false);
+  const [chatHistory, setChatHistory] = useState<ChatSession[]>([]);
   const messagesEndRef = useRef<HTMLDivElement>(null);
+
+  // Load chat history on component mount
+  useEffect(() => {
+    setChatHistory(getRecentSessions());
+  }, []);
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
@@ -21,6 +38,23 @@ export default function ChatInterface() {
   useEffect(() => {
     setShowWelcome(messages.length === 0);
   }, [messages]);
+
+  // Save current session when messages change
+  useEffect(() => {
+    if (messages.length > 0 && currentSessionId) {
+      const firstUserMessage = messages.find(m => m.type === 'user')?.content || 'New Chat';
+      const session: ChatSession = {
+        id: currentSessionId,
+        title: generateChatTitle(firstUserMessage),
+        messages,
+        createdAt: new Date(messages[0]?.timestamp || new Date()),
+        updatedAt: new Date()
+      };
+      
+      saveChatSession(session);
+      setChatHistory(getRecentSessions());
+    }
+  }, [messages, currentSessionId]);
 
   const topicQuestions = {
     'Company Policies': [
@@ -82,6 +116,11 @@ export default function ChatInterface() {
   };
 
   const handleQuickAction = (action: string) => {
+    // Start new session if none exists
+    if (!currentSessionId) {
+      setCurrentSessionId(generateSessionId());
+    }
+    
     setInput(action);
     // Auto-send the quick action
     setTimeout(() => {
@@ -98,6 +137,54 @@ export default function ChatInterface() {
     setIsLoading(false);
     setShowWelcome(true);
     setSelectedTopic(null);
+    setCurrentSessionId(null);
+    setShowHistory(false);
+  };
+
+  const handleStartNewSession = () => {
+    const newSessionId = generateSessionId();
+    setCurrentSessionId(newSessionId);
+    setMessages([]);
+    setInput('');
+    setIsLoading(false);
+    setShowWelcome(true);
+    setSelectedTopic(null);
+    setShowHistory(false);
+  };
+
+  const handleLoadChatSession = (sessionId: string) => {
+    const session = getChatSession(sessionId);
+    if (session) {
+      setCurrentSessionId(sessionId);
+      setMessages(session.messages);
+      setShowWelcome(false);
+      setSelectedTopic(null);
+      setShowHistory(false);
+    }
+  };
+
+  const handleDeleteSession = (sessionId: string, e: React.MouseEvent) => {
+    e.stopPropagation(); // Prevent loading the session when deleting
+    deleteChatSession(sessionId);
+    setChatHistory(getRecentSessions());
+    
+    // If we're deleting the current session, start a new one
+    if (sessionId === currentSessionId) {
+      handleNewChat();
+    }
+  };
+
+  const formatSessionDate = (date: Date): string => {
+    const now = new Date();
+    const diffInHours = (now.getTime() - date.getTime()) / (1000 * 60 * 60);
+    
+    if (diffInHours < 24) {
+      return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    } else if (diffInHours < 168) { // Less than a week
+      return date.toLocaleDateString([], { weekday: 'short' });
+    } else {
+      return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
+    }
   };
 
   const handlePolicyClick = (policyTitle: string) => {
@@ -120,6 +207,11 @@ export default function ChatInterface() {
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
     e.preventDefault();
     if (!input.trim() || isLoading) return;
+
+    // Start new session if none exists
+    if (!currentSessionId) {
+      setCurrentSessionId(generateSessionId());
+    }
 
     const userMessage: Message = {
       id: generateMessageId(),
@@ -197,53 +289,68 @@ export default function ChatInterface() {
     <div className="max-w-6xl mx-auto">
       {/* Chat Container */}
       <div 
-        className="rounded-lg shadow-lg h-[700px] flex flex-col border border-gray-700"
+        className="rounded-lg shadow-lg h-[600px] flex flex-col border border-gray-700"
         style={{ backgroundColor: colors.black }}
       >
         {/* Chat Header */}
         <div 
-            className="text-white p-4 rounded-t-lg border-b border-gray-600"
-            style={{ backgroundColor: colors.grayDark }}
+          className="text-white p-4 rounded-t-lg border-b border-gray-600"
+          style={{ backgroundColor: colors.grayDark }}
         >
-            <div className="flex items-center justify-between">
-                <div className="flex items-center">
-                    <div 
-                        className="w-10 h-10 rounded-lg flex items-center justify-center mr-3"
-                        style={{ backgroundColor: colors.orange }}
-                    >
-                        <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
-                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
-                        </svg>
-                    </div>
-                    <div>
-                        <h2 className="text-lg font-semibold text-white">AI Assistant</h2>
-                        <p className="text-gray-300 text-sm">Ready to help with your questions</p>
-                    </div>
-                </div>
-                <div className="flex items-center space-x-4">
-                    <div className="flex items-center space-x-2">
-                        <div 
-                          className="w-2 h-2 rounded-full animate-pulse"
-                          style={{ backgroundColor: colors.orange }}
-                        ></div>
-                        <span className="text-sm text-gray-300">Online</span>
-                    </div>
-                      {!showWelcome && (
-                        <button
-                          onClick={handleNewChat}
-                          className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors text-sm"
-                          style={{ backgroundColor: colors.grayMedium }}
-                          onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4b5563'}
-                          onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.grayMedium}
-                        >
-                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
-                          </svg>
-                          <span>New Chat</span>
-                        </button>
-                      )}
-                </div>
+          <div className="flex items-center justify-between">
+            <div className="flex items-center">
+              <div 
+                className="w-10 h-10 rounded-lg flex items-center justify-center mr-3"
+                style={{ backgroundColor: colors.orange }}
+              >
+                <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+                  <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
+                </svg>
+              </div>
+              <div>
+                <h2 className="text-lg font-semibold text-white">AI Assistant</h2>
+                <p className="text-gray-300 text-sm">Ready to help with your questions</p>
+              </div>
             </div>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.orange }}
+                ></div>
+                <span className="text-sm text-gray-300">Online</span>
+              </div>
+              
+              {/* Chat History Button */}
+              <button
+                onClick={() => setShowHistory(!showHistory)}
+                className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors text-sm"
+                style={{ backgroundColor: colors.grayMedium }}
+                onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4b5563'}
+                onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.grayMedium}
+              >
+                <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+                <span>History</span>
+              </button>
+
+              {!showWelcome && (
+                <button
+                  onClick={handleStartNewSession}
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors text-sm"
+                  style={{ backgroundColor: colors.grayMedium }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4b5563'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.grayMedium}
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>New Chat</span>
+                </button>
+              )}
+            </div>
+          </div>
         </div>
 
         {/* Messages Area */}
@@ -251,7 +358,73 @@ export default function ChatInterface() {
           className="flex-1 overflow-y-auto p-6 space-y-4"
           style={{ backgroundColor: colors.grayDark }}
         >
-          {showWelcome ? (
+          {showHistory ? (
+            <div className="max-w-2xl mx-auto">
+              <div className="flex items-center justify-between mb-6">
+                <h3 className="text-xl font-semibold text-white">Chat History</h3>
+                <button
+                  onClick={() => setShowHistory(false)}
+                  className="text-gray-400 hover:text-white transition-colors"
+                >
+                  <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                  </svg>
+                </button>
+              </div>
+              
+              {chatHistory.length === 0 ? (
+                <div className="text-center text-gray-400 py-12">
+                  <svg className="w-12 h-12 mx-auto mb-4 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  <p>No chat history yet</p>
+                  <p className="text-sm mt-2">Start a conversation to see it here</p>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {chatHistory.map((session) => (
+                    <div
+                      key={session.id}
+                      onClick={() => handleLoadChatSession(session.id)}
+                      className="p-4 rounded-lg border border-gray-600 cursor-pointer transition-all duration-200 hover:border-orange-500 group"
+                      style={{ backgroundColor: colors.grayMedium }}
+                      onMouseEnter={(e) => {
+                        e.currentTarget.style.backgroundColor = colors.grayDark;
+                        e.currentTarget.style.borderColor = colors.orange;
+                      }}
+                      onMouseLeave={(e) => {
+                        e.currentTarget.style.backgroundColor = colors.grayMedium;
+                        e.currentTarget.style.borderColor = '#4b5563';
+                      }}
+                    >
+                      <div className="flex items-center justify-between">
+                        <div className="flex-1 min-w-0">
+                          <h4 className="text-white font-medium truncate">{session.title}</h4>
+                          <div className="flex items-center space-x-2 mt-1">
+                            <span className="text-xs text-gray-400">
+                              {session.messages.length} messages
+                            </span>
+                            <span className="text-xs text-gray-500">•</span>
+                            <span className="text-xs text-gray-400">
+                              {formatSessionDate(session.updatedAt)}
+                            </span>
+                          </div>
+                        </div>
+                        <button
+                          onClick={(e) => handleDeleteSession(session.id, e)}
+                          className="ml-2 p-1 text-gray-500 hover:text-red-400 transition-colors opacity-0 group-hover:opacity-100"
+                        >
+                          <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16" />
+                          </svg>
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          ) : showWelcome ? (
             <div className="text-center text-gray-400 mt-16">
               <div 
                 className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"

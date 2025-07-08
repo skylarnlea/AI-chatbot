@@ -27,3 +27,11 @@ export interface ErrorResponse {
   error: string;
   details?: string;
 };
+
+export interface ChatSession {
+  id: string;
+  title: string;
+  createdAt: Date;
+  updatedAt: Date;
+  messages: Message[];
+};
