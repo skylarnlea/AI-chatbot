@@ -58,9 +58,9 @@ export default function ChatInterface() {
   };
 
   const topics = [
-    { name: 'Company Policies', color: 'bg-gray-700 text-gray-300 border-gray-600', hoverColor: 'hover:bg-gray-600 hover:border-gray-500' },
-    { name: 'HR Questions', color: 'bg-gray-700 text-gray-300 border-gray-600', hoverColor: 'hover:bg-gray-600 hover:border-gray-500' },
-    { name: 'IT Support', color: 'bg-gray-700 text-gray-300 border-gray-600', hoverColor: 'hover:bg-gray-600 hover:border-gray-500' },
+    { name: 'Company Policies', color: 'bg-[#ed7c31] text-white', hoverColor: 'hover:bg-[#d96a20]' },
+    { name: 'HR Questions', color: 'bg-[#ed7c31] text-white', hoverColor: 'hover:bg-[#d96a20]' },
+    { name: 'IT Support', color: 'bg-[#ed7c31] text-white', hoverColor: 'hover:bg-[#d96a20]' },
     { name: 'Benefits', color: 'bg-[#ed7c31] text-white', hoverColor: 'hover:bg-[#d96a20]' }
   ];
 
