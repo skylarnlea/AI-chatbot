@@ -8,6 +8,8 @@ export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
   const [input, setInput] = useState<string>('');
   const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [showWelcome, setShowWelcome] = useState<boolean>(true);
+  const [selectedTopic, setSelectedTopic] = useState<string | null>(null);
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
   // Auto-scroll to bottom when new messages arrive
@@ -15,8 +17,105 @@ export default function ChatInterface() {
     messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
   }, [messages]);
 
+  // Update welcome state based on messages
+  useEffect(() => {
+    setShowWelcome(messages.length === 0);
+  }, [messages]);
+
+  const topicQuestions = {
+    'Company Policies': [
+      "What's our dress code policy?",
+      "What are the remote work guidelines?",
+      "Tell me about our code of conduct",
+      "What's the vacation request process?",
+      "What are our office hours?",
+      "What's the expense reimbursement policy?"
+    ],
+    'HR Questions': [
+      "How do I update my personal information?",
+      "What benefits am I eligible for?",
+      "How do I request time off?",
+      "What's our performance review process?",
+      "How do I report a workplace issue?",
+      "What's our parental leave policy?"
+    ],
+    'IT Support': [
+      "How do I reset my password?",
+      "How do I connect to the company VPN?",
+      "What software is available for download?",
+      "How do I report a technical issue?",
+      "How do I request new equipment?",
+      "What's our data backup policy?"
+    ],
+    'Benefits': [
+      "What health insurance options do we have?",
+      "How does our 401k matching work?",
+      "What's included in our dental coverage?",
+      "Do we have a gym membership reimbursement?",
+      "What professional development budget is available?",
+      "What life insurance coverage do we provide?"
+    ]
+  };
+
+  const topics = [
+    { name: 'Company Policies', color: 'bg-gray-700 text-gray-300 border-gray-600', hoverColor: 'hover:bg-gray-600 hover:border-gray-500' },
+    { name: 'HR Questions', color: 'bg-gray-700 text-gray-300 border-gray-600', hoverColor: 'hover:bg-gray-600 hover:border-gray-500' },
+    { name: 'IT Support', color: 'bg-gray-700 text-gray-300 border-gray-600', hoverColor: 'hover:bg-gray-600 hover:border-gray-500' },
+    { name: 'Benefits', color: 'bg-[#ed7c31] text-white', hoverColor: 'hover:bg-[#d96a20]' }
+  ];
+
+  const quickActions = [
+    "What are our vacation days?",
+    "How does remote work work?", 
+    "What benefits do we have?",
+    "How do I submit expenses?",
+    "What's our sick leave policy?",
+    "Tell me about the code of conduct"
+  ];
+
   const generateMessageId = (): string => {
     return Date.now().toString() + Math.random().toString(36).substr(2, 9);
+  };
+
+  const handleTopicClick = (topicName: string) => {
+    setSelectedTopic(selectedTopic === topicName ? null : topicName);
+  };
+
+  const handleQuickAction = (action: string) => {
+    setInput(action);
+    // Auto-send the quick action
+    setTimeout(() => {
+      const form = document.querySelector('form');
+      if (form) {
+        form.requestSubmit();
+      }
+    }, 100);
+  };
+
+  const handleNewChat = () => {
+    setMessages([]);
+    setInput('');
+    setIsLoading(false);
+    setShowWelcome(true);
+    setSelectedTopic(null);
+  };
+
+  const handlePolicyClick = (policyTitle: string) => {
+    // Future: Could open policy details modal or navigate to policy page
+    console.log(`Policy clicked: ${policyTitle}`);
+    
+    // For now, show a toast-like notification
+    const notification = document.createElement('div');
+    notification.className = 'fixed top-4 right-4 bg-[#ed7c31] text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity';
+    notification.textContent = `Policy: ${policyTitle} (Feature coming soon)`;
+    document.body.appendChild(notification);
+    
+    setTimeout(() => {
+      notification.style.opacity = '0';
+      setTimeout(() => {
+        document.body.removeChild(notification);
+      }, 300);
+    }, 2000);
   };
 
   const sendMessage = async (e: React.FormEvent<HTMLFormElement>): Promise<void> => {
@@ -78,19 +177,6 @@ export default function ChatInterface() {
     }
   };
 
-  const quickActions = [
-    "What are our vacation days?",
-    "How does the remote work policy work?", 
-    "What benefits do we have?",
-    "How do I submit expenses?",
-    "What's our sick leave policy?",
-    "Tell me about the code of conduct"
-  ];
-
-  const handleQuickAction = (action: string) => {
-    setInput(action);
-  };
-
   const formatTime = (timestamp: Date): string => {
     return timestamp.toLocaleTimeString([], {
       hour: '2-digit',
@@ -126,16 +212,29 @@ export default function ChatInterface() {
                 <p className="text-gray-300 text-sm">Ready to help with your questions</p>
               </div>
             </div>
-            <div className="flex items-center space-x-2">
-              <div className="w-2 h-2 bg-[#ed7c31] rounded-full animate-pulse"></div>
-              <span className="text-sm text-gray-300">Online</span>
+            <div className="flex items-center space-x-4">
+              <div className="flex items-center space-x-2">
+                <div className="w-2 h-2 bg-[#ed7c31] rounded-full animate-pulse"></div>
+                <span className="text-sm text-gray-300">Online</span>
+              </div>
+              {!showWelcome && (
+                <button
+                  onClick={handleNewChat}
+                  className="flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-sm"
+                >
+                  <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
+                  </svg>
+                  <span>New Chat</span>
+                </button>
+              )}
             </div>
           </div>
         </div>
 
         {/* Messages Area */}
         <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-900">
-          {messages.length === 0 ? (
+          {showWelcome ? (
             <div className="text-center text-gray-400 mt-16">
               <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
                 <svg className="w-8 h-8 text-[#ed7c31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -146,28 +245,80 @@ export default function ChatInterface() {
               <p className="text-gray-400 mb-6 max-w-md mx-auto">
                 Ask me anything about company policies, HR questions, IT support, or general workplace information.
               </p>
+              
+              {/* Topic Badges */}
               <div className="flex flex-wrap justify-center gap-2 max-w-lg mx-auto mb-6">
-                <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm border border-gray-600">Company Policies</span>
-                <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm border border-gray-600">HR Questions</span>
-                <span className="px-3 py-1 bg-gray-700 text-gray-300 rounded-full text-sm border border-gray-600">IT Support</span>
-                <span className="px-3 py-1 bg-[#ed7c31] text-white rounded-full text-sm">Benefits</span>
+                {topics.map((topic) => (
+                  <button
+                    key={topic.name}
+                    onClick={() => handleTopicClick(topic.name)}
+                    className={`px-3 py-1 rounded-full text-sm border transition-all duration-200 ${topic.color} ${topic.hoverColor} ${
+                      selectedTopic === topic.name ? 'ring-2 ring-[#ed7c31] ring-offset-2 ring-offset-gray-900' : ''
+                    }`}
+                  >
+                    {topic.name}
+                  </button>
+                ))}
               </div>
               
-              {/* Quick Actions */}
-              <div className="max-w-2xl mx-auto">
-                <h4 className="text-gray-300 text-sm font-medium mb-3 text-center">Quick Questions:</h4>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                  {quickActions.map((action, index) => (
+              {/* Topic-Specific Questions */}
+              {selectedTopic && (
+                <div className="max-w-2xl mx-auto mb-6">
+                  <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
+                    <h4 className="text-[#ed7c31] text-sm font-medium mb-3 text-center flex items-center justify-center">
+                      <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                      </svg>
+                      Sample questions for {selectedTopic}:
+                    </h4>
+                    <div className="grid grid-cols-1 gap-2">
+                      {topicQuestions[selectedTopic as keyof typeof topicQuestions]?.map((question, index) => (
+                        <button
+                          key={index}
+                          onClick={() => handleQuickAction(question)}
+                          className="text-left p-3 bg-gray-900 hover:bg-gray-700 border border-gray-700 hover:border-[#ed7c31] rounded-lg text-gray-300 hover:text-white text-sm transition-all duration-200 group"
+                        >
+                          <div className="flex items-center justify-between">
+                            <span>{question}</span>
+                            <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-[#ed7c31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+                            </svg>
+                          </div>
+                        </button>
+                      ))}
+                    </div>
                     <button
-                      key={index}
-                      onClick={() => handleQuickAction(action)}
-                      className="text-left p-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-[#ed7c31] rounded-lg text-gray-300 hover:text-white text-sm transition-all duration-200"
+                      onClick={() => setSelectedTopic(null)}
+                      className="mt-3 w-full text-center text-xs text-gray-400 hover:text-gray-300 transition-colors"
                     >
-                      {action}
+                      ← Back to all topics
                     </button>
-                  ))}
+                  </div>
                 </div>
-              </div>
+              )}
+              
+              {/* General Quick Actions - only show when no topic is selected */}
+              {!selectedTopic && (
+                <div className="max-w-2xl mx-auto">
+                  <h4 className="text-gray-300 text-sm font-medium mb-3 text-center">Quick Questions:</h4>
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
+                    {quickActions.map((action, index) => (
+                      <button
+                        key={index}
+                        onClick={() => handleQuickAction(action)}
+                        className="text-left p-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-[#ed7c31] rounded-lg text-gray-300 hover:text-white text-sm transition-all duration-200 group"
+                      >
+                        <div className="flex items-center justify-between">
+                          <span>{action}</span>
+                          <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
+                          </svg>
+                        </div>
+                      </button>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
           ) : (
             messages.map((message) => (
@@ -209,15 +360,16 @@ export default function ChatInterface() {
                         <p className="text-xs text-gray-400 mb-2">Sources:</p>
                         <div className="flex flex-wrap gap-1">
                           {message.sources.map((source, idx) => (
-                            <span
+                            <button
                               key={idx}
-                              className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-[#ed7c31] text-white"
+                              onClick={() => handlePolicyClick(source.title)}
+                              className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-[#ed7c31] hover:bg-[#d96a20] text-white transition-colors cursor-pointer"
                             >
                               <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                               </svg>
                               {source.title}
-                            </span>
+                            </button>
                           ))}
                         </div>
                       </div>
