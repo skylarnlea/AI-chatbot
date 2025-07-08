@@ -1,8 +1,8 @@
-// src/components/ChatInterface.tsx
 'use client';
 
 import { useState, useRef, useEffect } from 'react';
 import { Message, ChatRequest, ChatResponse, ErrorResponse } from '@/types/chat';
+import { colors } from '@/styles/colors';
 
 export default function ChatInterface() {
   const [messages, setMessages] = useState<Message[]>([]);
@@ -58,10 +58,10 @@ export default function ChatInterface() {
   };
 
   const topics = [
-    { name: 'Company Policies', color: 'bg-[#ed7c31] text-white', hoverColor: 'hover:bg-[#d96a20]' },
-    { name: 'HR Questions', color: 'bg-[#ed7c31] text-white', hoverColor: 'hover:bg-[#d96a20]' },
-    { name: 'IT Support', color: 'bg-[#ed7c31] text-white', hoverColor: 'hover:bg-[#d96a20]' },
-    { name: 'Benefits', color: 'bg-[#ed7c31] text-white', hoverColor: 'hover:bg-[#d96a20]' }
+    { name: 'Company Policies' },
+    { name: 'HR Questions' },
+    { name: 'IT Support' },
+    { name: 'Benefits' }
   ];
 
   const quickActions = [
@@ -101,12 +101,11 @@ export default function ChatInterface() {
   };
 
   const handlePolicyClick = (policyTitle: string) => {
-    // Future: Could open policy details modal or navigate to policy page
     console.log(`Policy clicked: ${policyTitle}`);
     
-    // For now, show a toast-like notification
     const notification = document.createElement('div');
-    notification.className = 'fixed top-4 right-4 bg-[#ed7c31] text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity';
+    notification.className = `fixed top-4 right-4 text-white px-4 py-2 rounded-lg shadow-lg z-50 transition-opacity`;
+    notification.style.backgroundColor = colors.orange;
     notification.textContent = `Policy: ${policyTitle} (Feature coming soon)`;
     document.body.appendChild(notification);
     
@@ -197,12 +196,21 @@ export default function ChatInterface() {
   return (
     <div className="max-w-6xl mx-auto">
       {/* Chat Container */}
-      <div className="bg-gray-800 rounded-lg shadow-sm h-[600px] flex flex-col border border-gray-700">
+      <div 
+        className="rounded-lg shadow-lg h-[600px] flex flex-col border border-gray-700"
+        style={{ backgroundColor: colors.black }}
+      >
         {/* Chat Header */}
-        <div className="bg-gray-900 text-white p-4 rounded-t-lg border-b border-gray-700">
+        <div 
+          className="text-white p-4 rounded-t-lg border-b border-gray-600"
+          style={{ backgroundColor: colors.grayDark }}
+        >
           <div className="flex items-center justify-between">
             <div className="flex items-center">
-              <div className="w-10 h-10 bg-[#ed7c31] rounded-lg flex items-center justify-center mr-3">
+              <div 
+                className="w-10 h-10 rounded-lg flex items-center justify-center mr-3"
+                style={{ backgroundColor: colors.orange }}
+              >
                 <svg className="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
                   <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                 </svg>
@@ -214,13 +222,19 @@ export default function ChatInterface() {
             </div>
             <div className="flex items-center space-x-4">
               <div className="flex items-center space-x-2">
-                <div className="w-2 h-2 bg-[#ed7c31] rounded-full animate-pulse"></div>
+                <div 
+                  className="w-2 h-2 rounded-full animate-pulse"
+                  style={{ backgroundColor: colors.orange }}
+                ></div>
                 <span className="text-sm text-gray-300">Online</span>
               </div>
               {!showWelcome && (
                 <button
                   onClick={handleNewChat}
-                  className="flex items-center space-x-2 px-3 py-2 bg-gray-700 hover:bg-gray-600 rounded-lg transition-colors text-sm"
+                  className="flex items-center space-x-2 px-3 py-2 rounded-lg transition-colors text-sm"
+                  style={{ backgroundColor: colors.grayMedium }}
+                  onMouseEnter={(e) => e.currentTarget.style.backgroundColor = '#4b5563'}
+                  onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.grayMedium}
                 >
                   <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 4v16m8-8H4" />
@@ -233,11 +247,23 @@ export default function ChatInterface() {
         </div>
 
         {/* Messages Area */}
-        <div className="flex-1 overflow-y-auto p-6 space-y-4 bg-gray-900">
+        <div 
+          className="flex-1 overflow-y-auto p-6 space-y-4"
+          style={{ backgroundColor: colors.grayDark }}
+        >
           {showWelcome ? (
             <div className="text-center text-gray-400 mt-16">
-              <div className="w-16 h-16 bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-[#ed7c31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <div 
+                className="w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4"
+                style={{ backgroundColor: colors.grayMedium }}
+              >
+                <svg 
+                  className="w-8 h-8" 
+                  fill="none" 
+                  stroke="currentColor" 
+                  viewBox="0 0 24 24"
+                  style={{ color: colors.orange }}
+                >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
                 </svg>
               </div>
@@ -252,9 +278,16 @@ export default function ChatInterface() {
                   <button
                     key={topic.name}
                     onClick={() => handleTopicClick(topic.name)}
-                    className={`px-3 py-1 rounded-full text-sm border transition-all duration-200 ${topic.color} ${topic.hoverColor} ${
-                      selectedTopic === topic.name ? 'ring-2 ring-[#ed7c31] ring-offset-2 ring-offset-gray-900' : ''
+                    className={`px-3 py-1 rounded-full text-sm border transition-all duration-200 ${
+                      selectedTopic === topic.name ? 'ring-2 ring-orange-500 ring-offset-2 ring-offset-gray-800' : ''
                     }`}
+                    style={{ 
+                      backgroundColor: colors.orange,
+                      borderColor: colors.orange,
+                      color: colors.white
+                    }}
+                    onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.orangeHover}
+                    onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.orange}
                   >
                     {topic.name}
                   </button>
@@ -264,8 +297,14 @@ export default function ChatInterface() {
               {/* Topic-Specific Questions */}
               {selectedTopic && (
                 <div className="max-w-2xl mx-auto mb-6">
-                  <div className="bg-gray-800 rounded-lg p-4 border border-gray-700">
-                    <h4 className="text-[#ed7c31] text-sm font-medium mb-3 text-center flex items-center justify-center">
+                  <div 
+                    className="rounded-lg p-4 border border-gray-600"
+                    style={{ backgroundColor: colors.grayMedium }}
+                  >
+                    <h4 
+                      className="text-sm font-medium mb-3 text-center flex items-center justify-center"
+                      style={{ color: colors.orange }}
+                    >
                       <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                       </svg>
@@ -276,11 +315,26 @@ export default function ChatInterface() {
                         <button
                           key={index}
                           onClick={() => handleQuickAction(question)}
-                          className="text-left p-3 bg-gray-900 hover:bg-gray-700 border border-gray-700 hover:border-[#ed7c31] rounded-lg text-gray-300 hover:text-white text-sm transition-all duration-200 group"
+                          className="text-left p-3 border border-gray-600 rounded-lg text-gray-300 hover:text-white text-sm transition-all duration-200 group"
+                          style={{ backgroundColor: colors.grayDark }}
+                          onMouseEnter={(e) => {
+                            e.currentTarget.style.backgroundColor = colors.grayMedium;
+                            e.currentTarget.style.borderColor = colors.orange;
+                          }}
+                          onMouseLeave={(e) => {
+                            e.currentTarget.style.backgroundColor = colors.grayDark;
+                            e.currentTarget.style.borderColor = '#4b5563';
+                          }}
                         >
                           <div className="flex items-center justify-between">
                             <span>{question}</span>
-                            <svg className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity text-[#ed7c31]" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <svg 
+                              className="w-4 h-4 opacity-0 group-hover:opacity-100 transition-opacity" 
+                              fill="none" 
+                              stroke="currentColor" 
+                              viewBox="0 0 24 24"
+                              style={{ color: colors.orange }}
+                            >
                               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                             </svg>
                           </div>
@@ -297,7 +351,7 @@ export default function ChatInterface() {
                 </div>
               )}
               
-              {/* General Quick Actions - only show when no topic is selected */}
+              {/* General Quick Actions */}
               {!selectedTopic && (
                 <div className="max-w-2xl mx-auto">
                   <h4 className="text-gray-300 text-sm font-medium mb-3 text-center">Quick Questions:</h4>
@@ -306,7 +360,16 @@ export default function ChatInterface() {
                       <button
                         key={index}
                         onClick={() => handleQuickAction(action)}
-                        className="text-left p-3 bg-gray-800 hover:bg-gray-700 border border-gray-700 hover:border-[#ed7c31] rounded-lg text-gray-300 hover:text-white text-sm transition-all duration-200 group"
+                        className="text-left p-3 border border-gray-600 rounded-lg text-gray-300 hover:text-white text-sm transition-all duration-200 group"
+                        style={{ backgroundColor: colors.grayMedium }}
+                        onMouseEnter={(e) => {
+                          e.currentTarget.style.backgroundColor = colors.grayDark;
+                          e.currentTarget.style.borderColor = colors.orange;
+                        }}
+                        onMouseLeave={(e) => {
+                          e.currentTarget.style.backgroundColor = colors.grayMedium;
+                          e.currentTarget.style.borderColor = '#4b5563';
+                        }}
                       >
                         <div className="flex items-center justify-between">
                           <span>{action}</span>
@@ -328,11 +391,14 @@ export default function ChatInterface() {
               >
                 <div className={`flex items-start space-x-3 max-w-2xl ${message.type === 'user' ? 'flex-row-reverse space-x-reverse' : ''}`}>
                   {/* Avatar */}
-                  <div className={`w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 ${
-                    message.type === 'user' 
-                      ? 'bg-[#ed7c31] text-white' 
-                      : 'bg-gray-700 text-gray-300 border border-gray-600'
-                  }`}>
+                  <div 
+                    className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0"
+                    style={{ 
+                      backgroundColor: message.type === 'user' ? colors.orange : colors.grayMedium,
+                      color: colors.white,
+                      border: message.type === 'bot' ? '1px solid #4b5563' : 'none'
+                    }}
+                  >
                     {message.type === 'user' ? (
                       <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                         <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/>
@@ -346,24 +412,28 @@ export default function ChatInterface() {
                   
                   {/* Message Bubble */}
                   <div
-                    className={`px-4 py-3 rounded-lg ${
-                      message.type === 'user'
-                        ? 'bg-[#ed7c31] text-white'
-                        : 'bg-gray-800 border border-gray-700 text-gray-200 shadow-sm'
-                    }`}
+                    className="px-4 py-3 rounded-lg border"
+                    style={{
+                      backgroundColor: message.type === 'user' ? colors.orange : colors.grayMedium,
+                      borderColor: message.type === 'user' ? colors.orange : '#4b5563',
+                      color: colors.white
+                    }}
                   >
                     <p className="text-sm whitespace-pre-wrap leading-relaxed">{message.content}</p>
                     
-                    {/* Sources (only for bot messages) */}
+                    {/* Sources */}
                     {message.type === 'bot' && message.sources && message.sources.length > 0 && (
-                      <div className="mt-3 pt-3 border-t border-gray-700">
+                      <div className="mt-3 pt-3 border-t border-gray-600">
                         <p className="text-xs text-gray-400 mb-2">Sources:</p>
                         <div className="flex flex-wrap gap-1">
                           {message.sources.map((source, idx) => (
                             <button
                               key={idx}
                               onClick={() => handlePolicyClick(source.title)}
-                              className="inline-flex items-center px-2 py-1 rounded-full text-xs bg-[#ed7c31] hover:bg-[#d96a20] text-white transition-colors cursor-pointer"
+                              className="inline-flex items-center px-2 py-1 rounded-full text-xs text-white transition-colors cursor-pointer"
+                              style={{ backgroundColor: colors.orange }}
+                              onMouseEnter={(e) => e.currentTarget.style.backgroundColor = colors.orangeHover}
+                              onMouseLeave={(e) => e.currentTarget.style.backgroundColor = colors.orange}
                             >
                               <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -375,9 +445,7 @@ export default function ChatInterface() {
                       </div>
                     )}
                     
-                    <p className={`text-xs mt-2 ${
-                      message.type === 'user' ? 'text-orange-100' : 'text-gray-400'
-                    }`}>
+                    <p className={`text-xs mt-2 ${message.type === 'user' ? 'text-orange-100' : 'text-gray-400'}`}>
                       {formatTime(message.timestamp)}
                     </p>
                   </div>
@@ -388,14 +456,31 @@ export default function ChatInterface() {
           {isLoading && (
             <div className="flex justify-start">
               <div className="flex items-start space-x-3 max-w-2xl">
-                <div className="w-8 h-8 rounded-full bg-gray-700 text-gray-300 flex items-center justify-center flex-shrink-0 border border-gray-600">
+                <div 
+                  className="w-8 h-8 rounded-full flex items-center justify-center flex-shrink-0 border"
+                  style={{ 
+                    backgroundColor: colors.grayMedium,
+                    color: colors.white,
+                    borderColor: '#4b5563'
+                  }}
+                >
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 24 24">
                     <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-2 15l-5-5 1.41-1.41L10 14.17l7.59-7.59L19 8l-9 9z"/>
                   </svg>
                 </div>
-                <div className="bg-gray-800 border border-gray-700 text-gray-200 px-4 py-3 rounded-lg shadow-sm">
+                <div 
+                  className="px-4 py-3 rounded-lg border"
+                  style={{ 
+                    backgroundColor: colors.grayMedium,
+                    borderColor: '#4b5563',
+                    color: colors.white
+                  }}
+                >
                   <div className="flex items-center space-x-2">
-                    <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-[#ed7c31]"></div>
+                    <div 
+                      className="animate-spin rounded-full h-4 w-4 border-b-2"
+                      style={{ borderColor: colors.orange }}
+                    ></div>
                     <span className="text-sm">Thinking...</span>
                   </div>
                 </div>
@@ -406,7 +491,13 @@ export default function ChatInterface() {
         </div>
 
         {/* Input Area */}
-        <div className="border-t border-gray-700 p-4 bg-gray-800 rounded-b-lg">
+        <div 
+          className="border-t p-4 rounded-b-lg"
+          style={{ 
+            backgroundColor: colors.grayMedium,
+            borderColor: '#4b5563'
+          }}
+        >
           <form onSubmit={sendMessage} className="flex space-x-4">
             <input
               type="text"
@@ -414,14 +505,21 @@ export default function ChatInterface() {
               onChange={(e) => setInput(e.target.value)}
               onKeyPress={handleKeyPress}
               placeholder="Type your message here..."
-              className="flex-1 px-4 py-3 bg-gray-900 border border-gray-700 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#ed7c31] focus:border-[#ed7c31] text-gray-200 placeholder-gray-500"
+              className="flex-1 px-4 py-3 border rounded-lg focus:outline-none focus:ring-2 text-gray-200 placeholder-gray-500"
+              style={{ 
+                backgroundColor: colors.grayDark,
+                borderColor: '#4b5563'
+              }}
               disabled={isLoading}
               maxLength={1000}
             />
             <button
               type="submit"
               disabled={isLoading || !input.trim()}
-              className="px-6 py-3 bg-[#ed7c31] text-white rounded-lg hover:bg-[#d96a20] disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              className="px-6 py-3 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              style={{ backgroundColor: colors.orange }}
+              onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = colors.orangeHover)}
+              onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = colors.orange)}
             >
               {isLoading ? 'Sending...' : 'Send'}
             </button>
