@@ -2,12 +2,65 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { ChatRequest, ChatResponse, ErrorResponse, PolicySource } from '@/types/chat';
 import { searchPolicies } from '@/lib/mockKnowledge';
+import { generateChatResponse } from '@/lib/vertexai';
 
-// Helper function to simulate AI thinking time
-const delay = (ms: number) => new Promise(resolve => setTimeout(resolve, ms));
+// Note: Removed artificial delay since Vertex AI provides natural response time
 
-// Function to generate contextual responses using the knowledge base
-function generateContextualResponse(message: string): { response: string; sources: PolicySource[] } {
+// Enhanced function that combines knowledge base with Vertex AI
+async function generateEnhancedResponse(message: string): Promise<{ response: string; sources: PolicySource[] }> {
+  try {
+    // First, search for relevant policies in your knowledge base
+    const relevantPolicies = searchPolicies(message, 3);
+    
+    let aiResponse: string;
+    
+    if (relevantPolicies.length > 0) {
+      // If we have relevant policies, use them to enhance the AI prompt
+      const policyContext = relevantPolicies.map(policy => 
+        `${policy.title} (${policy.category}): ${policy.content}`
+      ).join('\n\n');
+      
+      const enhancedPrompt = `You are a helpful company AI assistant. Based on the following company policies and information, please answer the user's question: "${message}"
+
+Relevant Company Policies:
+${policyContext}
+
+Please provide a helpful, accurate response based on this information. If the policies don't fully answer the question, provide general guidance while noting that they should check with HR for specifics. Keep your response conversational and helpful.`;
+
+      aiResponse = await generateChatResponse(enhancedPrompt);
+      
+      // Create sources array
+      const sources: PolicySource[] = relevantPolicies.map(policy => ({
+        title: policy.title,
+        category: policy.category
+      }));
+      
+      return { response: aiResponse, sources };
+      
+    } else {
+      // No relevant policies found, use general AI response with company context
+      const generalPrompt = `You are a helpful company AI assistant for Cheil. The user asked: "${message}"
+
+Please provide a helpful response. If it's a general greeting, welcome them and explain what you can help with (company policies, benefits, HR procedures, etc.). If it's a specific question you can't answer from company policies, provide general guidance and suggest they contact HR (hr@company.com, (555) 123-4567) or IT support (it-support@company.com, (555) 123-TECH) as appropriate.
+
+Keep your response friendly, professional, and helpful.`;
+
+      aiResponse = await generateChatResponse(generalPrompt);
+      
+      return { response: aiResponse, sources: [] };
+    }
+    
+  } catch (vertexError) {
+    console.error('Vertex AI Error:', vertexError);
+    
+    // Fallback to your original knowledge-based response if Vertex AI fails
+    console.log('Falling back to knowledge-based response');
+    return generateFallbackResponse(message);
+  }
+}
+
+// Your original function as a fallback (slightly renamed)
+function generateFallbackResponse(message: string): { response: string; sources: PolicySource[] } {
   const lowerMessage = message.toLowerCase();
   
   // Search for relevant policies
@@ -78,12 +131,8 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // Simulate AI processing time (500ms to 2 seconds)
-    const processingTime = Math.floor(Math.random() * 1500) + 500;
-    await delay(processingTime);
-
-    // Generate contextual response using knowledge base
-    const { response: aiResponse, sources } = generateContextualResponse(message);
+    // Generate enhanced response using both knowledge base and Vertex AI
+    const { response: aiResponse, sources } = await generateEnhancedResponse(message);
 
     const response: ChatResponse = {
       response: aiResponse,

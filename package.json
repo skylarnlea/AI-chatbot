@@ -11,6 +11,7 @@
     "clean": "rm -rf node_modules package-lock.json && npm install"
   },
   "dependencies": {
+    "@google-cloud/vertexai": "^1.10.0",
     "@tailwindcss/postcss": "^4.1.11",
     "next": "^14.0.0",
     "react": "^18.2.0",
