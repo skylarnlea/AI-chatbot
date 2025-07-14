@@ -8,9 +8,21 @@ import { generateChatResponse } from '@/lib/vertexai';
 
 // Enhanced function that combines knowledge base with Vertex AI
 async function generateEnhancedResponse(message: string): Promise<{ response: string; sources: PolicySource[] }> {
+  
+  // TEMPORARY: Force fallback for testing (remove this later)
+  const FORCE_FALLBACK = false; // Set to true to test fallback responses
+  
+  if (FORCE_FALLBACK) {
+    console.log('🔄 Using fallback mode for testing');
+    return generateFallbackResponse(message);
+  }
+
   try {
+    console.log('🤖 Attempting to use Vertex AI for message:', message);
+    
     // First, search for relevant policies in your knowledge base
     const relevantPolicies = searchPolicies(message, 3);
+    console.log('📚 Found relevant policies:', relevantPolicies.length);
     
     let aiResponse: string;
     
@@ -27,7 +39,9 @@ ${policyContext}
 
 Please provide a helpful, accurate response based on this information. If the policies don't fully answer the question, provide general guidance while noting that they should check with HR for specifics. Keep your response conversational and helpful.`;
 
+      console.log('🎯 Using Vertex AI with policy context');
       aiResponse = await generateChatResponse(enhancedPrompt);
+      console.log('✅ Vertex AI response generated successfully');
       
       // Create sources array
       const sources: PolicySource[] = relevantPolicies.map(policy => ({
@@ -45,17 +59,22 @@ Please provide a helpful response. If it's a general greeting, welcome them and 
 
 Keep your response friendly, professional, and helpful.`;
 
+      console.log('🎯 Using Vertex AI with general context');
       aiResponse = await generateChatResponse(generalPrompt);
+      console.log('✅ Vertex AI response generated successfully');
       
       return { response: aiResponse, sources: [] };
     }
     
   } catch (vertexError) {
-    console.error('Vertex AI Error:', vertexError);
+    console.error('❌ Vertex AI Error:', vertexError);
+    
+    // TEMPORARY: Don't fallback, throw the error so we can see what's wrong
+    throw new Error(`Vertex AI failed: ${vertexError instanceof Error ? vertexError.message : 'Unknown error'}`);
     
     // Fallback to your original knowledge-based response if Vertex AI fails
-    console.log('Falling back to knowledge-based response');
-    return generateFallbackResponse(message);
+    // console.log('🔄 Falling back to knowledge-based response');
+    // return generateFallbackResponse(message);
   }
 }
 
