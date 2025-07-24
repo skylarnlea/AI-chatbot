@@ -1,7 +1,6 @@
 // src/components/chat/MessageBubble.tsx
 import React from 'react';
 import { Message } from '@/types/chat';
-import { colors } from '@/styles/colors';
 import { formatMessageTime } from '@/utils/dateFormatters';
 import { messageHasSources } from '@/utils/chatHelpers';
 import { PolicySourceBadge } from '@/components/chat/PolicySourceBadge';

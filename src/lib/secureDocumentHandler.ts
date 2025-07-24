@@ -35,9 +35,8 @@
 //   // Decrypt content for use
 //   decrypt(encryptedText: string): string {
 //     if (!isProductionSafe()) return encryptedText;
-    
+   
 //     const [ivHex, encrypted] = encryptedText.split(':');
-//     const iv = Buffer.from(ivHex, 'hex');
 //     const decipher = crypto.createDecipher('aes-256-gcm', this.encryptionKey);
 //     let decrypted = decipher.update(encrypted, 'hex', 'utf8');
 //     decrypted += decipher.final('utf8');
@@ -57,7 +56,7 @@
 // // Document sanitizer - removes sensitive information
 // export const sanitizeDocument = (content: string): string => {
 //   // Remove common sensitive patterns
-//   let sanitized = content
+//   const sanitized = content
 //     .replace(/\b\d{3}-\d{2}-\d{4}\b/g, '[SSN-REDACTED]') // SSNs
 //     .replace(/\b[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Z|a-z]{2,}\b/g, '[EMAIL-REDACTED]') // Emails
 //     .replace(/\b\d{3}-\d{3}-\d{4}\b/g, '[PHONE-REDACTED]') // Phone numbers
@@ -67,7 +66,7 @@
 // };
 
 // // Secure document loader
-// export const loadSecureDocuments = async (): Promise<any[]> => {
+// export const loadSecureDocuments = async (): Promise<unknown[]> => {
 //   // Security checks
 //   if (!isProductionSafe()) {
 //     console.warn('⚠️  Real document loading disabled - using mock data');

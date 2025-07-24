@@ -24,7 +24,6 @@ import { MessageBubble } from './chat/MessageBubble';
 import { LoadingMessage } from './chat/LoadingMessage';
 import { WelcomeScreen } from './welcome/WelcomeScreen';
 import { ChatHistory } from './history/ChatHistory';
-import { ChatbotIcon } from './ui/ChatbotIcon';
 
 // Utils
 import { 
@@ -151,7 +150,7 @@ export default function ChatInterface() {
 
         {/* Messages Area */}
         <div 
-          className="flex-1 overflow-y-auto p-6"
+          className="flex-1 p-6 overflow-y-auto"
           style={{ backgroundColor: colors.dark.bg }}
         >
           {showHistory ? (
