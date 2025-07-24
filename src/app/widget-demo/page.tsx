@@ -280,6 +280,29 @@ export default function ProjectPresentation() {
                 </div>
               ))}
             </div>
+
+            {/* Future Secure Document Integration Section */}
+            <div className="p-8 mt-16 border border-slate-700 rounded-2xl bg-slate-800/40 backdrop-blur-sm">
+              <h3 className="mb-6 text-3xl font-semibold text-center text-white">
+                Future Secure Document Integration
+              </h3>
+
+              <p className="max-w-4xl mx-auto mb-4 text-lg leading-relaxed text-slate-300">
+                When ready, we will securely upload company documents using Google Cloud Storage with strict access controls. Documents will be encrypted and processed safely in an isolated environment.
+              </p>
+
+              <p className="max-w-4xl mx-auto mb-4 text-lg leading-relaxed text-slate-300">
+                The system will extract key content, chunk large files intelligently, and add them to a secure search index powered by advanced AI, enabling accurate, privacy-conscious employee assistance.
+              </p>
+
+              <p className="max-w-4xl mx-auto mb-4 text-lg leading-relaxed text-slate-300">
+                Document access will be permission-restricted, encrypted in transit and at rest, with comprehensive audit logging to ensure compliance and data privacy.
+              </p>
+
+              <p className="max-w-4xl mx-auto text-lg italic leading-relaxed text-center text-slate-400">
+                Technologies: Google Cloud Storage, Cloud Run, IAM, encryption, AI-powered NLP, and secure API integration.
+              </p>
+            </div>
           </div>
         </div>
       </section>
