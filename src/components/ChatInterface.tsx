@@ -24,6 +24,7 @@ import { MessageBubble } from './chat/MessageBubble';
 import { LoadingMessage } from './chat/LoadingMessage';
 import { WelcomeScreen } from './welcome/WelcomeScreen';
 import { ChatHistory } from './history/ChatHistory';
+import { ChatbotIcon } from './ui/ChatbotIcon';
 
 // Utils
 import { 
@@ -139,8 +140,7 @@ export default function ChatInterface() {
     <div className="max-w-6xl mx-auto">
       {/* Chat Container */}
       <div 
-        className="rounded-lg shadow-lg h-[700px] flex flex-col border border-gray-700"
-        style={{ backgroundColor: colors.black }}
+        className="rounded-2xl shadow-2xl h-[700px] flex flex-col border border-slate-700 bg-slate-900"
       >
         <ChatHeader 
           showWelcome={showWelcome}
@@ -151,8 +151,8 @@ export default function ChatInterface() {
 
         {/* Messages Area */}
         <div 
-          className="flex-1 overflow-y-auto p-6 space-y-4"
-          style={{ backgroundColor: colors.grayDark }}
+          className="flex-1 overflow-y-auto p-6"
+          style={{ backgroundColor: colors.dark.bg }}
         >
           {showHistory ? (
             <ChatHistory

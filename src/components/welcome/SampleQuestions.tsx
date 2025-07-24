@@ -10,36 +10,36 @@ interface SampleQuestionsProps {
 
 const topicQuestions = {
   'Company Policies': [
+    "What's Cheil's mission and core values?",
     "What's our dress code policy?",
-    "What are the remote work guidelines?",
-    "Tell me about our code of conduct",
-    "What's the vacation request process?",
-    "What are our office hours?",
-    "What's the expense reimbursement policy?"
+    "Tell me about our code of conduct and ethics",
+    "What's our diversity and inclusion policy?",
+    "What are the emergency procedures?",
+    "How does our creative development process work?"
   ],
   'HR Questions': [
-    "How do I update my personal information?",
-    "What benefits am I eligible for?",
-    "How do I request time off?",
-    "What's our performance review process?",
-    "How do I report a workplace issue?",
-    "What's our parental leave policy?"
+    "What's our parental leave policy?",
+    "How does the hybrid work policy work?",
+    "What's our compensation philosophy?",
+    "What are the working hours and overtime rules?",
+    "How do I report workplace issues?",
+    "What learning and development programs are available?"
   ],
   'IT Support': [
-    "How do I reset my password?",
-    "How do I connect to the company VPN?",
-    "What software is available for download?",
-    "How do I report a technical issue?",
-    "How do I request new equipment?",
-    "What's our data backup policy?"
+    "What technology equipment do I get?",
+    "What's our data security policy?",
+    "How often do we refresh equipment?",
+    "What software licenses are provided?",
+    "What are the VPN and security requirements?",
+    "How do I get IT support?"
   ],
   'Benefits': [
-    "What health insurance options do we have?",
-    "How does our 401k matching work?",
-    "What's included in our dental coverage?",
-    "Do we have a gym membership reimbursement?",
-    "What professional development budget is available?",
-    "What life insurance coverage do we provide?"
+    "What health and wellness benefits do we have?",
+    "How does our 401k retirement plan work?",
+    "What's our tuition reimbursement program?",
+    "What office amenities are available?",
+    "What's the learning budget per employee?",
+    "Do we have gym membership reimbursement?"
   ]
 };
 
