@@ -29,7 +29,7 @@ export const LoadingMessage: React.FC = () => {
           <div className="flex items-center space-x-2">
             <div 
               className="animate-spin rounded-full h-4 w-4 border-b-2"
-              style={{ borderColor: colors.orange }}
+              style={{ borderColor: colors.primary }}
             ></div>
             <span className="text-sm">Thinking...</span>
           </div>

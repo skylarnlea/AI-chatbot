@@ -58,7 +58,7 @@ export const SampleQuestions: React.FC<SampleQuestionsProps> = ({
       >
         <h4 
           className="text-sm font-medium mb-3 text-center flex items-center justify-center"
-          style={{ color: colors.orange }}
+          style={{ color: colors.primary }}
         >
           <svg className="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8.228 9c.549-1.165 2.03-2 3.772-2 2.21 0 4 1.343 4 3 0 1.4-1.278 2.575-3.006 2.907-.542.104-.994.54-.994 1.093m0 3h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -75,7 +75,7 @@ export const SampleQuestions: React.FC<SampleQuestionsProps> = ({
               style={{ backgroundColor: colors.grayDark }}
               onMouseEnter={(e) => {
                 e.currentTarget.style.backgroundColor = colors.grayMedium;
-                e.currentTarget.style.borderColor = colors.orange;
+                e.currentTarget.style.borderColor = colors.primary;
               }}
               onMouseLeave={(e) => {
                 e.currentTarget.style.backgroundColor = colors.grayDark;
@@ -89,7 +89,7 @@ export const SampleQuestions: React.FC<SampleQuestionsProps> = ({
                   fill="none" 
                   stroke="currentColor" 
                   viewBox="0 0 24 24"
-                  style={{ color: colors.orange }}
+                  style={{ color: colors.primary }}
                 >
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
                 </svg>

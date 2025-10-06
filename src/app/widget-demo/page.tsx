@@ -93,7 +93,7 @@ export default function ProjectPresentation() {
   ];
 
   return (
-    <div className="min-h-screen" style={{ background: 'linear-gradient(135deg, #0f172a 0%, #1e293b 100%)' }}>
+    <div className="min-h-screen bg-gradient-to-br from-slate-900 to-slate-800">
       {/* Navigation */}
       <nav className="fixed top-0 z-30 w-full border-b bg-slate-900/80 backdrop-blur-md border-slate-700">
         <div className="container px-4 mx-auto">
@@ -108,7 +108,7 @@ export default function ProjectPresentation() {
                   key={section}
                   onClick={() => scrollToSection(section)}
                   className={`text-sm font-medium transition-colors capitalize ${
-                    activeSection === section ? 'text-orange-400' : 'text-slate-300 hover:text-white'
+                    activeSection === section ? 'text-accent' : 'text-slate-300 hover:text-white'
                   }`}
                 >
                   {section}
@@ -128,20 +128,20 @@ export default function ProjectPresentation() {
               <span className="text-sm text-slate-300">Live Demo Available</span>
             </div>
             
-            <h1 className="mb-8 text-6xl font-bold leading-tight text-white md:text-7xl">
-              Intelligent Employee
-              <br />
-              <span style={{ color: colors.primary }}>AI Assistant</span>
-            </h1>
+              <h1 className="mb-8 text-6xl font-bold leading-tight text-white md:text-7xl">
+                Intelligent Employee
+                <br />
+                <span className="text-accent">AI Assistant</span>
+              </h1>
             
             <p className="max-w-4xl mx-auto mb-12 text-xl leading-relaxed md:text-2xl text-slate-300">
-              A sophisticated RAG-powered chatbot built with <strong className="text-orange-400">Next.js</strong>, <strong className="text-orange-400">Vertex AI</strong>, and <strong className="text-orange-400">TypeScript</strong> to revolutionize employee self-service and workplace productivity.
+              A sophisticated RAG-powered chatbot built with <strong className="text-accent">Next.js</strong>, <strong className="text-accent">Vertex AI</strong>, and <strong className="text-accent">TypeScript</strong> to revolutionize employee self-service and workplace productivity.
             </p>
 
             <div className="flex flex-wrap justify-center gap-4 mb-16">
-              <a 
-                href="#demo" 
-                className="inline-flex items-center px-8 py-4 font-semibold text-white transition-all duration-200 transform shadow-lg bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 rounded-xl hover:shadow-xl hover:scale-105"
+              <a
+                href="#demo"
+                className="inline-flex items-center px-8 py-4 font-semibold text-white transition-all duration-200 transform shadow-lg rounded-xl hover:shadow-xl hover:scale-105 bg-gradient-to-r from-accent to-accent-600"
               >
                 Try Live Demo
                 <svg className="w-5 h-5 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -162,19 +162,19 @@ export default function ProjectPresentation() {
             {/* Stats */}
             <div className="grid grid-cols-2 gap-8 md:grid-cols-4">
               <div className="text-center">
-                <div className="mb-2 text-3xl font-bold text-orange-400">24/7</div>
+                <div className="mb-2 text-3xl font-bold text-accent">24/7</div>
                 <div className="text-sm text-slate-400">Availability</div>
               </div>
               <div className="text-center">
-                <div className="mb-2 text-3xl font-bold text-orange-400">&lt;2s</div>
+                <div className="mb-2 text-3xl font-bold text-accent">&lt;2s</div>
                 <div className="text-sm text-slate-400">Response Time</div>
               </div>
               <div className="text-center">
-                <div className="mb-2 text-3xl font-bold text-orange-400">20+</div>
+                <div className="mb-2 text-3xl font-bold text-accent">20+</div>
                 <div className="text-sm text-slate-400">Policy Areas</div>
               </div>
               <div className="text-center">
-                <div className="mb-2 text-3xl font-bold text-orange-400">95%</div>
+                <div className="mb-2 text-3xl font-bold text-accent">95%</div>
                 <div className="text-sm text-slate-400">Accuracy Rate</div>
               </div>
             </div>
@@ -197,11 +197,11 @@ export default function ProjectPresentation() {
 
             <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
               {features.map((feature, idx) => (
-                <div key={idx} className="p-8 transition-all duration-300 border group bg-slate-800/30 backdrop-blur-sm border-slate-700 rounded-2xl hover:bg-slate-800/50 hover:border-orange-500/30">
+                <div key={idx} className="p-8 transition-all duration-300 border group bg-slate-800/30 backdrop-blur-sm border-slate-700 rounded-2xl hover:bg-slate-800/50">
                   <div className="mb-4 text-4xl">{feature.icon}</div>
                   <h3 className="mb-3 text-xl font-semibold text-white">{feature.title}</h3>
                   <p className="mb-4 leading-relaxed text-slate-400">{feature.description}</p>
-                  <div className="text-sm font-medium text-orange-400">{feature.technical}</div>
+                  <div className="text-sm font-medium text-accent">{feature.technical}</div>
                 </div>
               ))}
             </div>
@@ -215,7 +215,7 @@ export default function ProjectPresentation() {
           <div className="max-w-6xl mx-auto">
             <div className="mb-16 text-center">
               <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">
-                Technology <span style={{ color: colors.primary }}>Stack</span>
+                Technology <span className="text-accent">Stack</span>
               </h2>
               <p className="max-w-3xl mx-auto text-xl text-slate-400">
                 Modern, scalable technologies powering intelligent conversations
@@ -228,7 +228,7 @@ export default function ProjectPresentation() {
                   <div className="flex items-center space-x-4">
                     <div className="text-3xl">{tech.icon}</div>
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-white transition-colors group-hover:text-orange-400">{tech.name}</h3>
+                      <h3 className="text-lg font-semibold text-white transition-colors group-hover:text-accent">{tech.name}</h3>
                       <p className="text-sm text-slate-400">{tech.description}</p>
                     </div>
                   </div>
@@ -241,13 +241,13 @@ export default function ProjectPresentation() {
               <h3 className="mb-6 text-2xl font-bold text-center text-white">System Architecture</h3>
               <div className="flex flex-wrap items-center justify-center gap-4 text-slate-300">
                 <div className="px-4 py-2 rounded-lg bg-slate-700">User Interface</div>
-                <div className="text-orange-400">→</div>
+                <div className="text-accent">→</div>
                 <div className="px-4 py-2 rounded-lg bg-slate-700">Next.js API</div>
-                <div className="text-orange-400">→</div>
+                <div className="text-accent">→</div>
                 <div className="px-4 py-2 rounded-lg bg-slate-700">RAG Search</div>
-                <div className="text-orange-400">→</div>
+                <div className="text-accent">→</div>
                 <div className="px-4 py-2 rounded-lg bg-slate-700">Vertex AI</div>
-                <div className="text-orange-400">→</div>
+                <div className="text-accent">→</div>
                 <div className="px-4 py-2 rounded-lg bg-slate-700">Response</div>
               </div>
             </div>
@@ -261,7 +261,7 @@ export default function ProjectPresentation() {
           <div className="max-w-6xl mx-auto">
             <div className="mb-16 text-center">
               <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">
-                Real-World <span style={{ color: colors.primary }}>Applications</span>
+                Real-World <span className="text-accent">Applications</span>
               </h2>
               <p className="max-w-3xl mx-auto text-xl text-slate-400">
                 Transform your organization with AI-powered employee assistance
@@ -274,8 +274,8 @@ export default function ProjectPresentation() {
                   <h3 className="mb-3 text-xl font-semibold text-white">{useCase.title}</h3>
                   <p className="mb-4 leading-relaxed text-slate-400">{useCase.description}</p>
                   <div className="flex items-center space-x-2">
-                    <div className="w-2 h-2 bg-orange-400 rounded-full"></div>
-                    <span className="text-sm font-medium text-orange-400">{useCase.metrics}</span>
+            <div className="w-2 h-2 rounded-full accent-dot"></div>
+              <span className="text-sm font-medium text-accent">{useCase.metrics}</span>
                   </div>
                 </div>
               ))}
@@ -315,7 +315,7 @@ export default function ProjectPresentation() {
                     {/* Features Grid */}
                     <div className="grid gap-8 mb-16 md:grid-cols-3">
                         <div className="p-6 transition-all duration-300 border bg-slate-800/50 backdrop-blur-sm border-slate-700 rounded-xl hover:bg-slate-800/70">
-                            <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600">
+              <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-lg bg-gradient-to-r from-accent to-accent-600">
                                 <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                                 </svg>
@@ -324,20 +324,20 @@ export default function ProjectPresentation() {
                             <p className="text-slate-400">Uses Google&apos;s Vertex AI with Gemini models for intelligent, contextual responses.</p>
                         </div>
                         <div className="p-6 transition-all duration-300 border bg-slate-800/50 backdrop-blur-sm border-slate-700 rounded-xl hover:bg-slate-800/70">
-                            <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-lg bg-gradient-to-br from-orange-500 to-orange-600">
-                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-lg bg-gradient-to-r from-accent to-accent-600">
+                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" />                
                                 </svg>              
                             </div>              
                             <h3 className="mb-2 text-lg font-semibold text-white">RAG-Enabled</h3>              
                             <p className="text-slate-400">Searches through company knowledge base to provide accurate, source-backed answers.</p>            
                         </div>            
-                        <div className="bg-slate-800/50 backdrop-blur-sm border border-slate-700 rounded-xl p-6 hover:bg-slate-800/70 transition-all duration-300\">              
-                            <div className="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mb-4\">                
-                                <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">                  
-                                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />                
-                                </svg>              
-                            </div>              
+            <div className="p-6 transition-all duration-300 border bg-slate-800/50 backdrop-blur-sm border-slate-700 rounded-xl hover:bg-slate-800/70">              
+              <div className="flex items-center justify-center w-12 h-12 mb-4 rounded-lg bg-gradient-to-r from-accent to-accent-600">
+        <svg className="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />                
+                </svg>              
+              </div>              
                             <h3 className="mb-2 text-lg font-semibold text-white">Enterprise Ready</h3>
                             <p className="text-slate-400">Built with security, scalability, and enterprise deployment in mind.</p>
                         </div>
@@ -346,8 +346,8 @@ export default function ProjectPresentation() {
                     {/* Demo Instructions */}
                     <div className="p-8 mb-8 border bg-slate-800/30 backdrop-blur-sm border-slate-700 rounded-xl">
                         <h2 className="mb-4 text-2xl font-bold text-white">Try the Chatbot Widget</h2>
-                        <p className="mb-6 text-slate-300">
-                            Click the <span style={{ color: colors.primary }}>#1</span> button in the bottom-right corner to start chatting!
+        <p className="mb-6 text-slate-300">
+              Click the <span className="text-accent">#1</span> button in the bottom-right corner to start chatting!
                             The widget demonstrates how the chatbot would integrate into your existing website.
                         </p>
 
@@ -384,7 +384,7 @@ export default function ProjectPresentation() {
                                 "What's our hybrid work policy?"
                             ].map((question, idx) => (
                                 <div key={idx} className="flex items-center space-x-2 text-slate-300">
-                                    <div className="flex-shrink-0 w-2 h-2 rounded-full bg-gradient-to-r from-orange-500 to-orange-600" />
+                    <div className="flex-shrink-0 w-2 h-2 rounded-full bg-accent-500" />
                                     <span className="text-sm">{question}</span>
                                 </div>
                             ))}
@@ -422,10 +422,10 @@ export default function ProjectPresentation() {
                             <p>This would open the full chat interface.</p>
                             <p className="mt-2 text-sm">In the real integration, this would show your ChatInterface component.</p>
                             <div className="mt-6">
-                                <a
-                                    href="/"
-                                    className="inline-flex items-center px-4 py-2 font-medium text-white transition-all duration-200 transform rounded-lg shadow-lg bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 hover:shadow-xl hover:scale-105"
-                                >
+                <a
+                  href="/"
+                  className="inline-flex items-center px-4 py-2 font-medium text-white transition-all duration-200 transform rounded-lg shadow-lg hover:shadow-xl hover:scale-105 bg-gradient-to-r from-accent to-accent-600"
+                >
                                     Try Full Chat Interface
                                     <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                                         <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M13 7l5 5m0 0l-5 5m5-5H6" />

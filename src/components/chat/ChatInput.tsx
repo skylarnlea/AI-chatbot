@@ -59,7 +59,7 @@ export const ChatInput: React.FC<ChatInputProps> = ({
             backgroundColor: colors.grayDark,
             borderColor: '#4b5563'
           }}
-          onFocus={(e) => e.currentTarget.style.borderColor = colors.orange}
+          onFocus={(e) => e.currentTarget.style.borderColor = colors.primary}
           onBlur={(e) => e.currentTarget.style.borderColor = '#4b5563'}
           disabled={isLoading || disabled}
           maxLength={1000}
@@ -68,9 +68,9 @@ export const ChatInput: React.FC<ChatInputProps> = ({
           type="submit"
           disabled={!canSend}
           className="px-6 py-3 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-          style={{ backgroundColor: colors.orange }}
-          onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = colors.orangeHover)}
-          onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = colors.orange)}
+          style={{ backgroundColor: colors.primary }}
+          onMouseEnter={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = colors.primaryHover)}
+          onMouseLeave={(e) => !e.currentTarget.disabled && (e.currentTarget.style.backgroundColor = colors.primary)}
         >
           {isLoading ? 'Sending...' : 'Send'}
         </button>

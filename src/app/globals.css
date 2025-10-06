@@ -8,15 +8,11 @@
   html {
     font-family: 'Nunito Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     letter-spacing: -0.01em;
+    scroll-behavior: smooth;
   }
   
   .font-mono {
     font-family: 'JetBrains Mono', Consolas, Monaco, 'Courier New', monospace;
-  }
-  
-  /* Smooth scrolling */
-  html {
-    scroll-behavior: smooth;
   }
   
   /* Custom scrollbar */
@@ -36,34 +32,94 @@
   ::-webkit-scrollbar-thumb:hover {
     background: #64748b;
   }
+  
+  body {
+    background: var(--background);
+    color: var(--foreground);
+    font-family: 'Nunito Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    letter-spacing: -0.01em;
+    line-height: 1.6;
+  }
 }
 
 @layer components {
+  /* Accent utility classes (use for primary accent color) */
+  .text-accent { 
+    color: var(--accent-400); 
+  }
+  
+  .accent-dot { 
+    background: var(--accent-400); 
+  }
+  
+  .accent-arrow { 
+    color: var(--accent-400); 
+  }
+  
+  .accent-border { 
+    border-color: var(--accent-500); 
+  }
+  
+  .accent-bg { 
+    background: linear-gradient(90deg, var(--accent-500), var(--accent-600)); 
+    color: white; 
+  }
+  
+  .accent-btn {
+    background: linear-gradient(90deg, var(--accent-500), var(--accent-600));
+    color: white;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 0.5rem;
+    transition: all .2s ease;
+  }
+  
+  .accent-btn:hover { 
+    filter: brightness(0.95); 
+    transform: translateY(-1px); 
+  }
+  
+  .accent-ring:focus { 
+    box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.15); 
+  }
+
   /* Enhanced button styles */
   .btn-primary {
-    @apply bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white font-semibold px-6 py-3 rounded-lg transition-all duration-300 shadow-lg hover:shadow-xl transform hover:scale-105 active:scale-95 tracking-tight;
+    @apply px-6 py-3 font-semibold tracking-tight text-white transition-all duration-200 rounded-lg;
+    background: linear-gradient(90deg, var(--accent-500), var(--accent-600));
+  }
+  
+  .btn-primary:hover { 
+    filter: brightness(0.95); 
+    transform: translateY(-1px); 
+  }
+  
+  .btn-primary:focus { 
+    box-shadow: 0 0 0 6px rgba(var(--accent-rgb), 0.15); 
   }
   
   .btn-secondary {
-    @apply bg-slate-700 hover:bg-slate-600 text-slate-100 font-semibold px-6 py-3 rounded-lg transition-all duration-300 border border-slate-600 hover:border-slate-500 tracking-tight;
+    @apply px-6 py-3 font-semibold tracking-tight transition-all duration-300 border rounded-lg bg-slate-700 hover:bg-slate-600 text-slate-100 border-slate-600 hover:border-slate-500;
   }
   
   /* Glass morphism effect */
   .glass {
-    @apply backdrop-blur-sm bg-white/10 border border-white/20;
+    @apply border backdrop-blur-sm bg-white/10 border-white/20;
   }
   
   /* Enhanced message bubbles */
   .message-bubble {
-    @apply rounded-2xl px-4 py-3 max-w-2xl break-words transition-all duration-300;
+    @apply max-w-2xl px-4 py-3 break-words transition-all duration-300 rounded-2xl;
   }
   
   .message-user {
-    @apply bg-gradient-to-r from-orange-500 to-orange-600 text-white ml-auto;
+    background: linear-gradient(90deg, var(--accent-500), var(--accent-600));
+    color: white;
+    margin-left: auto;
   }
   
   .message-bot {
-    @apply bg-slate-800 text-slate-100 border border-slate-700;
+    @apply border bg-slate-800 text-slate-100 border-slate-700;
   }
   
   /* Loading animation */
@@ -72,7 +128,11 @@
   }
   
   .loading-dots div {
-    @apply w-2 h-2 bg-orange-500 rounded-full animate-bounce;
+    width: .5rem; 
+    height: .5rem; 
+    border-radius: 9999px; 
+    background: var(--accent-500); 
+    animation: bounce 1s infinite;
   }
   
   .loading-dots div:nth-child(2) {
@@ -102,16 +162,51 @@
   
   /* Enhanced typography */
   .text-gradient {
-    @apply bg-gradient-to-r from-orange-400 to-orange-600 bg-clip-text text-transparent font-bold tracking-tight;
+    background: linear-gradient(90deg, var(--accent-400), var(--accent-600));
+    -webkit-background-clip: text; 
+    background-clip: text; 
+    color: transparent; 
+    font-weight: 700; 
+    letter-spacing: -0.02em;
   }
   
   .text-corporate {
-    @apply font-semibold tracking-tight leading-tight;
+    @apply font-semibold leading-tight tracking-tight;
   }
   
   /* Input enhancements */
   .input-enhanced {
-    @apply bg-slate-800/50 border border-slate-700 rounded-lg px-4 py-3 text-slate-100 placeholder-slate-400 focus:border-orange-500 focus:ring-2 focus:ring-orange-500/20 transition-all duration-300 backdrop-blur-sm;
+    @apply px-4 py-3 transition-all duration-300 border rounded-lg bg-slate-800/50 border-slate-700 text-slate-100 placeholder-slate-400 backdrop-blur-sm;
+    outline: none;
+  }
+  
+  .input-enhanced:focus { 
+    border-color: var(--accent-500); 
+    box-shadow: 0 0 0 8px rgba(var(--accent-rgb), 0.08); 
+  }
+}
+
+/* CSS Variables */
+:root {
+  /* Accent (lime green) variables to match colors.ts primary values */
+  --accent-400: #34d399;
+  --accent-500: #0f766e;
+  --accent-600: #0e6b63;
+  --accent-rgb: 15, 118, 110;
+  
+  /* Theme colors */
+  --background: #ffffff;
+  --foreground: #171717;
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #0a0a0a;
+    --foreground: #ededed;
   }
 }
 
@@ -158,31 +253,4 @@
     opacity: 1;
     transform: translateX(0);
   }
-}
-
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: 'Nunito Sans', system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-  letter-spacing: -0.01em;
-  line-height: 1.6;
 }

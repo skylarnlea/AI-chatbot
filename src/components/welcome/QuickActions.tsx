@@ -28,7 +28,7 @@ export const QuickActions: React.FC<QuickActionsProps> = ({ onQuickAction }) => 
             style={{ backgroundColor: colors.grayMedium }}
             onMouseEnter={(e) => {
               e.currentTarget.style.backgroundColor = colors.grayDark;
-              e.currentTarget.style.borderColor = colors.orange;
+              e.currentTarget.style.borderColor = colors.primary;
             }}
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = colors.grayMedium;

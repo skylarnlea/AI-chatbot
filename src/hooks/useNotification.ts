@@ -37,7 +37,7 @@ export const useNotification = (): UseNotificationReturn => {
         notification.style.backgroundColor = '#ef4444';
         break;
       default:
-        notification.style.backgroundColor = colors.orange;
+        notification.style.backgroundColor = colors.primary;
     }
     
     notification.textContent = message;

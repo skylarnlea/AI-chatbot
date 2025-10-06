@@ -37,12 +37,12 @@ export const ChatbotIcon: React.FC<ChatbotIconProps> = ({
         ${className}
         relative rounded-2xl shadow-lg hover:shadow-xl 
         transform hover:scale-105 transition-all duration-300 ease-out
-        focus:outline-none focus:ring-4 focus:ring-orange-200
+  focus:outline-none accent-ring
         group overflow-hidden
         ${isActive ? 'scale-105 shadow-xl' : ''}
       `}
       style={{
-        background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
+  background: `linear-gradient(135deg, ${colors.primary} 0%, ${colors.secondary} 100%)`,
       }}
     >
       {/* Subtle shine effect */}
@@ -67,7 +67,7 @@ export const ChatbotIcon: React.FC<ChatbotIconProps> = ({
       {isActive && (
         <div 
           className="absolute w-3 h-3 rounded-full -top-1 -right-1 animate-pulse"
-          style={{ backgroundColor: colors.accent }}
+          style={{ backgroundColor: colors.primaryLight }}
         />
       )}
     </button>

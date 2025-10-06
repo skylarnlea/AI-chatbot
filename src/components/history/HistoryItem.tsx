@@ -18,15 +18,15 @@ export const HistoryItem: React.FC<HistoryItemProps> = ({
   return (
     <div
       onClick={onLoad}
-      className="p-4 rounded-lg border border-gray-600 cursor-pointer transition-all duration-200 hover:border-orange-500 group"
+  className="p-4 rounded-lg border border-gray-600 cursor-pointer transition-all duration-200 group"
       style={{ backgroundColor: colors.grayMedium }}
       onMouseEnter={(e) => {
-        e.currentTarget.style.backgroundColor = colors.grayDark;
-        e.currentTarget.style.borderColor = colors.orange;
+  e.currentTarget.style.backgroundColor = colors.grayDark;
+  e.currentTarget.style.borderColor = colors.primary;
       }}
       onMouseLeave={(e) => {
-        e.currentTarget.style.backgroundColor = colors.grayMedium;
-        e.currentTarget.style.borderColor = '#4b5563';
+  e.currentTarget.style.backgroundColor = colors.grayMedium;
+  e.currentTarget.style.borderColor = '#4b5563';
       }}
     >
       <div className="flex items-center justify-between">
