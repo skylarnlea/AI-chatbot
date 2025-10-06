@@ -98,9 +98,9 @@ export default function ProjectPresentation() {
       <nav className="fixed top-0 z-30 w-full border-b bg-slate-900/80 backdrop-blur-md border-slate-700">
         <div className="container px-4 mx-auto">
           <div className="flex items-center justify-between h-16">
-            <div className="flex items-center space-x-2">
+              <div className="flex items-center space-x-2">
               <ChatbotIcon size="sm" />
-              <span className="text-lg font-bold text-white">Cheil AI Assistant</span>
+              <span className="text-lg font-bold text-white">Company AI Assistant</span>
             </div>
             <div className="hidden space-x-6 md:flex">
               {['overview', 'features', 'technology', 'demo'].map((section) => (
@@ -375,8 +375,8 @@ export default function ProjectPresentation() {
                     <div className="p-8 border bg-slate-800/30 backdrop-blur-sm border-slate-700 rounded-xl">
                         <h3 className="mb-4 text-xl font-semibold text-white">Try asking:</h3>
                         <div className="grid gap-3 md:grid-cols-2">
-                            {[
-                                "What's Cheil's mission and values?",
+              {[
+                "What's the company's mission and values?",
                                 "How does our parental leave work?",
                                 "What technology equipment do I get?",
                                 "What are our office amenities?",
@@ -403,7 +403,7 @@ export default function ProjectPresentation() {
                             <div className="flex items-center space-x-3">
                                 <ChatbotIcon size="sm" />
                                 <div>
-                                    <h3 className="font-semibold text-white">Cheil AI Assistant</h3>
+                                    <h3 className="font-semibold text-white">Company AI Assistant</h3>
                                     <p className="text-sm text-slate-400">Ready to help with your questions</p>
                                 </div>
                             </div>

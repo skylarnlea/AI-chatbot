@@ -94,7 +94,7 @@ export const ChatbotWidget: React.FC<{ onToggle: () => void; isOpen: boolean }> 
       {/* Tooltip */}
       {!isOpen && (
         <div className="absolute right-0 px-3 py-2 mb-2 text-sm text-white transition-opacity duration-200 border rounded-lg shadow-lg opacity-0 bottom-full bg-slate-800 group-hover:opacity-100 whitespace-nowrap border-slate-600">
-          Ask me anything about Cheil!
+          Ask me anything about the company!
           <div className="absolute w-2 h-2 -mt-1 transform rotate-45 border-b border-r top-full right-4 bg-slate-800 border-slate-600" />
         </div>
       )}

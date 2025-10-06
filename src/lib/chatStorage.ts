@@ -1,7 +1,7 @@
 // src/lib/chatStorage.ts
 import { ChatSession, Message, PolicySource } from '@/types/chat';
 
-const STORAGE_KEY = 'cheil_chat_history';
+const STORAGE_KEY = 'chat_history';
 const MAX_SESSIONS = 50; // Limit to prevent storage bloat
 
 // Generate a chat title from the first user message

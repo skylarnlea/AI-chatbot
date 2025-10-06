@@ -10,7 +10,7 @@ interface SampleQuestionsProps {
 
 const topicQuestions = {
   'Company Policies': [
-    "What's Cheil's mission and core values?",
+  "What's the company's mission and core values?",
     "What's our dress code policy?",
     "Tell me about our code of conduct and ethics",
     "What's our diversity and inclusion policy?",

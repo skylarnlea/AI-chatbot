@@ -1,15 +1,15 @@
 steps:
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/cheil-ai-chatbot', '.' ]
+  args: [ 'build', '-t', 'gcr.io/$PROJECT_ID/ai-chatbot', '.' ]
   - name: 'gcr.io/cloud-builders/docker'
-    args: [ 'push', 'gcr.io/$PROJECT_ID/cheil-ai-chatbot' ]
+  args: [ 'push', 'gcr.io/$PROJECT_ID/ai-chatbot' ]
   - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
     entrypoint: gcloud
     args:
       - 'run'
       - 'deploy'
-      - 'cheil-ai-chatbot'
-      - '--image=gcr.io/$PROJECT_ID/cheil-ai-chatbot'
+  - 'ai-chatbot'
+  - '--image=gcr.io/$PROJECT_ID/ai-chatbot'
       - '--platform=managed'
       - '--region=us-central1'
       - '--allow-unauthenticated'

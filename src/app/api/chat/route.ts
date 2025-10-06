@@ -53,7 +53,7 @@ Please provide a helpful, accurate response based on this information. If the po
       
     } else {
       // No relevant policies found, use general AI response with company context
-      const generalPrompt = `You are a helpful company AI assistant for Cheil. The user asked: "${message}"
+  const generalPrompt = `You are a helpful company AI assistant. The user asked: "${message}"
 
 Please provide a helpful response. If it's a general greeting, welcome them and explain what you can help with (company policies, benefits, HR procedures, etc.). If it's a specific question you can't answer from company policies, provide general guidance and suggest they contact HR (hr@company.com, (555) 123-4567) or IT support (it-support@company.com, (555) 123-TECH) as appropriate.
 
@@ -116,9 +116,9 @@ function generateFallbackResponse(message: string): { response: string; sources:
   } else if (lowerMessage.includes('help') || lowerMessage.includes('support')) {
     response = "I'm here to help! I can provide information about:\n\n• Employee benefits and insurance\n• Time off and vacation policies\n• Remote work arrangements\n• Expense reimbursement\n• Code of conduct and workplace policies\n• HR procedures and guidelines\n\nWhat specific topic would you like to know about?";
   } else if (lowerMessage.includes('contact') || lowerMessage.includes('hr') || lowerMessage.includes('human resources')) {
-    response = "For direct HR support, you can:\n\n• Email: hr@company.com\n• Phone: (555) 123-4567\n• Submit a ticket through the Cheil Help Desk\n• Visit the HR office on the 3rd floor\n\nFor immediate policy questions, I can help you right here! What would you like to know?";
+  response = "For direct HR support, you can:\n\n• Email: hr@company.com\n• Phone: (555) 123-4567\n• Submit a ticket through the company Help Desk\n• Visit the HR office on the 3rd floor\n\nFor immediate policy questions, I can help you right here! What would you like to know?";
   } else if (lowerMessage.includes('it') || lowerMessage.includes('technical') || lowerMessage.includes('computer')) {
-    response = "For IT support, please:\n\n• Submit a ticket through the Cheil Help Desk for technical issues\n• Email: it-support@company.com\n• Call the IT helpline: (555) 123-TECH\n• For password resets, use the self-service portal\n\nI can also help with general IT policy questions. What do you need assistance with?";
+  response = "For IT support, please:\n\n• Submit a ticket through the company Help Desk for technical issues\n• Email: it-support@company.com\n• Call the IT helpline: (555) 123-TECH\n• For password resets, use the self-service portal\n\nI can also help with general IT policy questions. What do you need assistance with?";
   } else {
     response = "I'd be happy to help you with company policies and information! I have access to details about benefits, time off, remote work, expenses, and workplace guidelines. Could you be more specific about what you're looking for? For example, you could ask about:\n\n• \"What are our vacation days?\"\n• \"How does remote work policy work?\"\n• \"What benefits do we have?\"\n• \"How do I submit expenses?\"";
   }

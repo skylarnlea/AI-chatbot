@@ -47,7 +47,7 @@
 // // Access control
 // export const checkAccess = (userEmail?: string): boolean => {
 //   // In real implementation, check against authorized users list
-//   const authorizedDomains = ['@cheil.com']; // Only company emails
+//   const authorizedDomains = ['@company.com']; // Only company emails
   
 //   if (!userEmail) return false;
 //   return authorizedDomains.some(domain => userEmail.endsWith(domain));
