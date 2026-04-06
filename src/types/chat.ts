@@ -1,7 +1,6 @@
-// src/types/chat.ts
 export interface Message {
   id: string;
-  type: 'user' | 'bot';
+  type: "user" | "bot";
   content: string;
   timestamp: Date;
   sources?: PolicySource[]; // Optional sources for bot messages
@@ -26,7 +25,7 @@ export interface ChatResponse {
 export interface ErrorResponse {
   error: string;
   details?: string;
-};
+}
 
 export interface ChatSession {
   id: string;
@@ -34,4 +33,4 @@ export interface ChatSession {
   createdAt: Date;
   updatedAt: Date;
   messages: Message[];
-};
+}

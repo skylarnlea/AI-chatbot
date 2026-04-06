@@ -1,41 +1,41 @@
-// src/components/ChatInterface.tsx (Refactored)
-'use client';
+"use client";
 
-import React, { useState, useRef, useEffect } from 'react';
-import { ChatSession } from '@/types/chat';
-import { colors } from '@/styles/colors';
+import React, { useState, useRef, useEffect } from "react";
+import { ChatSession } from "@/types/chat";
+import { colors } from "@/styles/colors";
 
 // Import storage functions directly for now
-import { 
-  saveChatSession, 
-  getChatSession, 
-  deleteChatSession, 
-  getRecentSessions 
-} from '@/lib/chatStorage';
+import {
+  saveChatSession,
+  getChatSession,
+  deleteChatSession,
+  getRecentSessions,
+} from "@/lib/chatStorage";
 
 // Custom Hooks
-import { useChat } from '@/hooks/useChat';
-import { useNotification } from '@/hooks/useNotification';
+import { useChat } from "@/hooks/useChat";
+import { useNotification } from "@/hooks/useNotification";
 
 // Components
-import { ChatHeader } from './chat/ChatHeader';
-import { ChatInput } from './chat/ChatInput';
-import { MessageBubble } from './chat/MessageBubble';
-import { LoadingMessage } from './chat/LoadingMessage';
-import { WelcomeScreen } from './welcome/WelcomeScreen';
-import { ChatHistory } from './history/ChatHistory';
+import { ChatHeader } from "./chat/ChatHeader";
+import { ChatInput } from "./chat/ChatInput";
+import { MessageBubble } from "./chat/MessageBubble";
+import { LoadingMessage } from "./chat/LoadingMessage";
+import { WelcomeScreen } from "./welcome/WelcomeScreen";
+import { ChatHistory } from "./history/ChatHistory";
 
 // Utils
-import { 
-  isConversationEmpty, 
-  generateSessionId, 
-  generateChatTitle, 
-  getFirstUserMessage 
-} from '@/utils/chatHelpers';
+import {
+  isConversationEmpty,
+  generateSessionId,
+  generateChatTitle,
+  getFirstUserMessage,
+} from "@/utils/chatHelpers";
 
 export default function ChatInterface() {
   // Custom hooks
-  const { messages, isLoading, sendMessage, setMessages, clearMessages } = useChat();
+  const { messages, isLoading, sendMessage, setMessages, clearMessages } =
+    useChat();
   const { showPolicyNotification } = useNotification();
 
   // Local state
@@ -55,7 +55,7 @@ export default function ChatInterface() {
 
   // Auto-scroll to bottom when new messages arrive
   useEffect(() => {
-    messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   }, [messages]);
 
   // Save session when messages change
@@ -69,7 +69,7 @@ export default function ChatInterface() {
         createdAt: new Date(messages[0]?.timestamp || new Date()),
         updatedAt: new Date(),
       };
-      
+
       saveChatSession(session);
       setChatHistory(getRecentSessions());
     }
@@ -85,7 +85,7 @@ export default function ChatInterface() {
     if (!currentSessionId) {
       setCurrentSessionId(generateSessionId());
     }
-    
+
     setSelectedTopic(null);
     await sendMessage(action);
   };
@@ -95,7 +95,7 @@ export default function ChatInterface() {
     if (!currentSessionId) {
       setCurrentSessionId(generateSessionId());
     }
-    
+
     await sendMessage(content);
   };
 
@@ -120,7 +120,7 @@ export default function ChatInterface() {
     e.stopPropagation();
     deleteChatSession(sessionId);
     setChatHistory(getRecentSessions());
-    
+
     // If we're deleting the current session, start a new one
     if (sessionId === currentSessionId) {
       handleNewChat();
@@ -138,10 +138,11 @@ export default function ChatInterface() {
   return (
     <div className="max-w-6xl mx-auto">
       {/* Chat Container */}
-      <div 
-        className="rounded-2xl shadow-2xl h-[700px] flex flex-col border border-slate-700 bg-slate-900"
+      <div
+        className="rounded-lg shadow-lg h-[700px] flex flex-col border border-gray-700"
+        style={{ backgroundColor: colors.black }}
       >
-        <ChatHeader 
+        <ChatHeader
           showWelcome={showWelcome}
           showHistory={showHistory}
           onToggleHistory={handleToggleHistory}
@@ -149,9 +150,9 @@ export default function ChatInterface() {
         />
 
         {/* Messages Area */}
-        <div 
-          className="flex-1 p-6 overflow-y-auto"
-          style={{ backgroundColor: colors.dark.bg }}
+        <div
+          className="flex-1 overflow-y-auto p-6 space-y-4"
+          style={{ backgroundColor: colors.grayDark }}
         >
           {showHistory ? (
             <ChatHistory
@@ -181,7 +182,7 @@ export default function ChatInterface() {
           <div ref={messagesEndRef} />
         </div>
 
-        <ChatInput 
+        <ChatInput
           onSendMessage={handleSendMessage}
           isLoading={isLoading}
           disabled={showHistory}
@@ -189,4 +190,4 @@ export default function ChatInterface() {
       </div>
     </div>
   );
-};
+}

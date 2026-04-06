@@ -1,7 +1,6 @@
-// src/lib/chatStorage.ts
-import { ChatSession, Message, PolicySource } from '@/types/chat';
+import { ChatSession, Message, PolicySource } from "@/types/chat";
 
-const STORAGE_KEY = 'chat_history';
+const STORAGE_KEY = "cheil_chat_history";
 const MAX_SESSIONS = 50; // Limit to prevent storage bloat
 
 // Generate a chat title from the first user message
@@ -10,7 +9,7 @@ export const generateChatTitle = (firstMessage: string): string => {
   if (firstMessage.length <= maxLength) {
     return firstMessage;
   }
-  return firstMessage.substring(0, maxLength - 3) + '...';
+  return firstMessage.substring(0, maxLength - 3) + "...";
 };
 
 // Generate session ID
@@ -22,42 +21,47 @@ export const generateSessionId = (): string => {
 export const saveChatSession = (session: ChatSession): void => {
   try {
     const existingSessions = getChatHistory();
-    
+
     // Check if session already exists (update it)
-    const existingIndex = existingSessions.findIndex((s: ChatSession) => s.id === session.id);
-    
+    const existingIndex = existingSessions.findIndex(
+      (s: ChatSession) => s.id === session.id,
+    );
+
     if (existingIndex >= 0) {
       existingSessions[existingIndex] = {
         ...session,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       };
     } else {
       // Add new session at the beginning
       existingSessions.unshift({
         ...session,
-        updatedAt: new Date()
+        updatedAt: new Date(),
       });
     }
-    
+
     // Keep only the most recent sessions
     const trimmedSessions = existingSessions.slice(0, MAX_SESSIONS);
-    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(trimmedSessions, (key: string, value: unknown) => {
-      // Convert Date objects to ISO strings for storage
-      if (value instanceof Date) {
-        return value.toISOString();
-      }
-      return value;
-    }));
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(trimmedSessions, (key: string, value: unknown) => {
+        // Convert Date objects to ISO strings for storage
+        if (value instanceof Date) {
+          return value.toISOString();
+        }
+        return value;
+      }),
+    );
   } catch (error) {
-    console.error('Failed to save chat session:', error);
+    console.error("Failed to save chat session:", error);
   }
 };
 
 // Types for stored data (with string dates)
 interface StoredMessage {
   id: string;
-  type: 'user' | 'bot';
+  type: "user" | "bot";
   content: string;
   timestamp: string; // ISO string
   sources?: PolicySource[];
@@ -76,25 +80,29 @@ export const getChatHistory = (): ChatSession[] => {
   try {
     const stored = localStorage.getItem(STORAGE_KEY);
     if (!stored) return [];
-    
+
     const sessions: StoredChatSession[] = JSON.parse(stored);
-    
+
     // Convert ISO strings back to Date objects with proper typing
-    return sessions.map((session: StoredChatSession): ChatSession => ({
-      id: session.id,
-      title: session.title,
-      createdAt: new Date(session.createdAt),
-      updatedAt: new Date(session.updatedAt),
-      messages: session.messages.map((message: StoredMessage): Message => ({
-        id: message.id,
-        type: message.type,
-        content: message.content,
-        timestamp: new Date(message.timestamp),
-        sources: message.sources
-      }))
-    }));
+    return sessions.map(
+      (session: StoredChatSession): ChatSession => ({
+        id: session.id,
+        title: session.title,
+        createdAt: new Date(session.createdAt),
+        updatedAt: new Date(session.updatedAt),
+        messages: session.messages.map(
+          (message: StoredMessage): Message => ({
+            id: message.id,
+            type: message.type,
+            content: message.content,
+            timestamp: new Date(message.timestamp),
+            sources: message.sources,
+          }),
+        ),
+      }),
+    );
   } catch (error) {
-    console.error('Failed to load chat history:', error);
+    console.error("Failed to load chat history:", error);
     return [];
   }
 };
@@ -109,16 +117,21 @@ export const getChatSession = (sessionId: string): ChatSession | null => {
 export const deleteChatSession = (sessionId: string): void => {
   try {
     const sessions = getChatHistory();
-    const filteredSessions = sessions.filter((s: ChatSession) => s.id !== sessionId);
-    
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(filteredSessions, (key: string, value: unknown) => {
-      if (value instanceof Date) {
-        return value.toISOString();
-      }
-      return value;
-    }));
+    const filteredSessions = sessions.filter(
+      (s: ChatSession) => s.id !== sessionId,
+    );
+
+    localStorage.setItem(
+      STORAGE_KEY,
+      JSON.stringify(filteredSessions, (key: string, value: unknown) => {
+        if (value instanceof Date) {
+          return value.toISOString();
+        }
+        return value;
+      }),
+    );
   } catch (error) {
-    console.error('Failed to delete chat session:', error);
+    console.error("Failed to delete chat session:", error);
   }
 };
 
@@ -127,7 +140,7 @@ export const clearChatHistory = (): void => {
   try {
     localStorage.removeItem(STORAGE_KEY);
   } catch (error) {
-    console.error('Failed to clear chat history:', error);
+    console.error("Failed to clear chat history:", error);
   }
 };
 

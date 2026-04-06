@@ -1,13 +1,12 @@
-// src/hooks/useChatHistory.ts
-import { useState, useCallback, useEffect } from 'react';
-import { ChatSession, Message } from '@/types/chat';
+import { useState, useCallback, useEffect } from "react";
+import { ChatSession, Message } from "@/types/chat";
 import {
   saveChatSession,
   getChatSession,
   deleteChatSession,
   getRecentSessions,
-} from '@/lib/chatStorage';
-import { generateChatTitle, getFirstUserMessage } from '@/utils/chatHelpers';
+} from "@/lib/chatStorage";
+import { generateChatTitle, getFirstUserMessage } from "@/utils/chatHelpers";
 
 interface UseChatHistoryReturn {
   chatHistory: ChatSession[];
@@ -41,31 +40,37 @@ export const useChatHistory = (): UseChatHistoryReturn => {
     return null;
   }, []);
 
-  const deleteSession = useCallback((sessionId: string) => {
-    deleteChatSession(sessionId);
-    refreshHistory();
-    
-    // If we're deleting the current session, clear it
-    if (sessionId === currentSessionId) {
-      setCurrentSessionId(null);
-    }
-  }, [currentSessionId, refreshHistory]);
+  const deleteSession = useCallback(
+    (sessionId: string) => {
+      deleteChatSession(sessionId);
+      refreshHistory();
 
-  const saveCurrentSession = useCallback((messages: Message[], sessionId: string) => {
-    if (messages.length === 0) return;
+      // If we're deleting the current session, clear it
+      if (sessionId === currentSessionId) {
+        setCurrentSessionId(null);
+      }
+    },
+    [currentSessionId, refreshHistory],
+  );
 
-    const firstUserMessage = getFirstUserMessage(messages);
-    const session: ChatSession = {
-      id: sessionId,
-      title: generateChatTitle(firstUserMessage),
-      messages,
-      createdAt: new Date(messages[0]?.timestamp || new Date()),
-      updatedAt: new Date(),
-    };
+  const saveCurrentSession = useCallback(
+    (messages: Message[], sessionId: string) => {
+      if (messages.length === 0) return;
 
-    saveChatSession(session);
-    refreshHistory();
-  }, [refreshHistory]);
+      const firstUserMessage = getFirstUserMessage(messages);
+      const session: ChatSession = {
+        id: sessionId,
+        title: generateChatTitle(firstUserMessage),
+        messages,
+        createdAt: new Date(messages[0]?.timestamp || new Date()),
+        updatedAt: new Date(),
+      };
+
+      saveChatSession(session);
+      refreshHistory();
+    },
+    [refreshHistory],
+  );
 
   const createNewSession = useCallback((): string => {
     const newSessionId = `session_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`;
