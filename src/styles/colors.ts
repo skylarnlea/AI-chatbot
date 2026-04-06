@@ -16,10 +16,6 @@ export const colors = {
   secondary: "#0ea5e9", // Cool blue for secondary accents
   accent: "#60a5fa", // Light blue accent
 
-  // Neutral Palette
-  white: "#ffffff",
-  black: "#000000",
-
   // Sophisticated Grays
   slate: {
     50: "#f8fafc",
@@ -49,11 +45,7 @@ export const colors = {
   warning: "#f59e0b",
   error: "#ef4444",
   info: "#0ea5e9",
-
-  // Legacy support aliases (kept for backward compatibility)
-  grayDark: "#25343e",
-  grayMedium: "#3b4a58",
-} as const;
+};
 
 // Type for color keys
 export type ColorKey = keyof typeof colors;
