@@ -1,8 +1,7 @@
-// src/components/history/ChatHistory.tsx
-import React from 'react';
-import { ChatSession } from '@/types/chat';
-import { HistoryItem } from './HistoryItem';
-import { EmptyHistory } from './EmptyHistory';
+import React from "react";
+import { ChatSession } from "@/types/chat";
+import { HistoryItem } from "./HistoryItem";
+import { EmptyHistory } from "./EmptyHistory";
 
 interface ChatHistoryProps {
   chatHistory: ChatSession[];
@@ -15,7 +14,7 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({
   chatHistory,
   onLoadSession,
   onDeleteSession,
-  onClose
+  onClose,
 }) => {
   return (
     <div className="max-w-2xl mx-auto">
@@ -25,12 +24,22 @@ export const ChatHistory: React.FC<ChatHistoryProps> = ({
           onClick={onClose}
           className="text-gray-400 hover:text-white transition-colors"
         >
-          <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+          <svg
+            className="w-5 h-5"
+            fill="none"
+            stroke="currentColor"
+            viewBox="0 0 24 24"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M6 18L18 6M6 6l12 12"
+            />
           </svg>
         </button>
       </div>
-      
+
       {chatHistory.length === 0 ? (
         <EmptyHistory />
       ) : (
